@@ -96,6 +96,7 @@ class Character extends MovableObject {
   characterSleep = false;
   iterationCountIdleAnimation = 0;
   isHurt = false;
+  idWalkAnimation;
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
@@ -164,7 +165,7 @@ class Character extends MovableObject {
    * This function checks if the player presses any of the left, right or up buttons. In case it starts the animation and flips the image if the character changes direction.
    */
   characterWalkAnimation() {
-    let id = setInterval(() => {
+    this.idWalkAnimation = setInterval(() => {
       if (this.keyboard.LEFT && !this.jumpAnimationStarted && !this.isHurt) {
         this.otherDirection = true;
         this.startAnimationWalking();
@@ -177,7 +178,7 @@ class Character extends MovableObject {
         this.stopAudioWalking();
       }
     }, 70);
-    this.intervalIdsMovableObjects.push(id);
+    this.intervalIdsMovableObjects.push(this.idWalkAnimation);
   }
 
   /**
@@ -444,7 +445,6 @@ class Character extends MovableObject {
           currentIndexDie++;
         } else {
           this.img = this.imageCache["img/2_character_pepe/5_dead/D-57.png"];
-          world.stopAllIntervals();
         }
       }
     }, 100);

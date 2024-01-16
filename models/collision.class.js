@@ -28,6 +28,7 @@ class RectanglesCollision {
     this.rectanglesEnemies.forEach((enemy) => {
       if (this.isCollidingObject(enemy)) {
         this.characterIsHurt();
+        this.characterIsDead()
       }
     });
   }
@@ -58,6 +59,12 @@ class RectanglesCollision {
       this.hurtTimeout = setTimeout(() => {
         this.collisionDetected = false;
       }, 1000);
+    }
+  }
+
+  characterIsDead() {
+    if (world.character.health < 20) {
+      world.stopAllIntervals();
     }
   }
 

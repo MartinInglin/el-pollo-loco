@@ -40,5 +40,6 @@ class ChickenSmall extends MovableObject {
         }
       }
     }, 30);
+    this.intervalIdsMovableObjects.push(id);
   }
 }
