@@ -16,8 +16,9 @@ class ChickenSmall extends MovableObject {
     this.loadImages(this.imagesWalking);
     this.x = Math.random() * (1500 - 700) + 700;
 
+    checkWorldExistence().then(() => {
     this.startMovingTowardsCharacter();
-
+    });
   }
 
   /**
@@ -26,7 +27,7 @@ class ChickenSmall extends MovableObject {
   startMovingTowardsCharacter() {
     let audioPlayed = false;
 
-    this.moveInterval = setInterval(() => {
+    let id = setInterval(() => {
       if (world) {
         let distance = this.x - world.character.x;
         if (distance < 400) {

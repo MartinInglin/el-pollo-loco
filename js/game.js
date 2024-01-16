@@ -19,3 +19,14 @@ function redirectOnRefreseh() {
     window.location.href = "index.html";
   }
 }
+
+function checkWorldExistence() {
+  return new Promise((resolve) => {
+    const checkInterval = setInterval(() => {
+      if (typeof world !== "undefined" && world !== null) {
+        clearInterval(checkInterval);
+        resolve();
+      }
+    }, 100);
+  });
+}

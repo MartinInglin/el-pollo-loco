@@ -12,6 +12,7 @@ class MovableObject {
   speedX = 0;
   acceleration = 2;
   health;
+  intervalIdsMovableObjects = [];
 
   /**
    * This function is there for loading the first image of an object. It fills the variable img.
@@ -90,12 +91,13 @@ class MovableObject {
    * This function simulates the gravity of any object. If the object is above ground it subtracts the acceleration from its speedY until it is back on the ground.
    */
   applyGravity() {
-    setInterval(() => {
+    let id = setInterval(() => {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
       }
     }, 1000 / 25);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -105,5 +107,9 @@ class MovableObject {
    */
   isAboveGround() {
     return this.y < 250;
+  }
+
+  stopIntervalsMovableObjects() {
+    this.intervalIdsMovableObjects.forEach(clearInterval);
   }
 }

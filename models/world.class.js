@@ -6,10 +6,7 @@ class World {
   camera_x = 0;
   level = new Level(level1);
   rectanglesCollision = new RectanglesCollision();
-  intervals = {
-    character: {
-    },
-  };
+
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -59,7 +56,7 @@ class World {
    *
    * @param {string} imagePath - This string is inserted in the path. It may look like this "3_third_layer/"
    * @param {number} layerNumberForImage - This string is inserted in the path. It is the number which defines in which layer the image is drawn.
-   * @param {number} reproductionCountX - This number counts how many times the background images are drawn on the y-axis. The higher this number the longer the level. It is defined in level1.js/backgroundReproductionCountX.
+   * @param {number} reproductionCountX - This number counts how many times the background images are drawn on the x-axis. The higher this number the longer the level. It is defined in level1.js/backgroundReproductionCountX.
    */
   createGround(imagePath, layerNumberForImage, reproductionCountX) {
     const imagePathForLayer = `img/5_background/layers/${imagePath}/${layerNumberForImage}.png`;
@@ -82,7 +79,6 @@ class World {
     this.addRectanglesToMap(this.rectanglesCollision.rectangleCharacter);
     this.addRectanglesToMap(this.rectanglesCollision.rectanglesEnemies);
     this.addRectanglesToMap(this.rectanglesCollision.rectanglesCoins);
-
 
     this.ctx.translate(-this.camera_x, 0);
 
@@ -119,20 +115,19 @@ class World {
   }
 
   addRectanglesToMap(rectangles) {
-    rectangles.forEach(rectangle => {
+    rectangles.forEach((rectangle) => {
       this.addRectangleToMap(rectangle);
     });
   }
-  
+
   addRectangleToMap(rectanglesCollision) {
     this.ctx.beginPath();
     this.ctx.rect(rectanglesCollision.x, rectanglesCollision.y, rectanglesCollision.width, rectanglesCollision.height);
-    this.ctx.lineWidth = 5;  // Set the width of the stroke
-    this.ctx.strokeStyle = 'blue';  // Set the color of the stroke
-    this.ctx.stroke();  // Draw the rectangle outline
+    this.ctx.lineWidth = 5; // Set the width of the stroke
+    this.ctx.strokeStyle = "blue"; // Set the color of the stroke
+    this.ctx.stroke(); // Draw the rectangle outline
     this.ctx.closePath();
   }
-  
 
   /**
    * This function flips the image in case the player moves its character to the left side of the screen.
@@ -156,18 +151,17 @@ class World {
     this.ctx.restore();
   }
 
-  clearAllIntervals() {
-    for (const category in this.intervals) {
-      const categoryIntervals = this.intervals[category];
+  stopAllIntervals() {
+    this.rectanglesCollision.stopIntervalsCollsion();
 
-      for (const intervalName in categoryIntervals) {
-        const intervalId = categoryIntervals[intervalName];
-
-        if (intervalId !== null) {
-          clearInterval(intervalId);
-          categoryIntervals[intervalName] = null;
+    const stopIntervalsMovableObjects = (movableObjects) => {
+      movableObjects.forEach((object) => {
+        if (object instanceof MovableObject) {
+          object.stopIntervalsMovableObjects();
         }
-      }
-    }
+      });
+    };
+
+    stopIntervalsMovableObjects([this.character, ...this.level.enemies, ...this.level.clouds]);
   }
 }

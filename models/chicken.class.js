@@ -16,30 +16,35 @@ class Chicken extends MovableObject {
 
     this.x = 800 + Math.random() * 500;
     this.speed = Math.random() * (0.5 - 0.1) + 0.1;
+
+    checkWorldExistence().then(() => {
     this.checkObjectOnCanvas();
     this.chickenMoveLeft();
     this.chickenWalkingAnimation();
+  });
   }
 
   /**
    * This function sets an interval to move the chicken to the left.
    */
   chickenMoveLeft() {
-    setInterval(() => this.moveLeft(), 10);
+    let id = setInterval(() => this.moveLeft(), 10);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
    * This function executes the walking animation of the chicken.
    */
   chickenWalkingAnimation() {
-    setInterval(() => this.walkingAnimation(), 100);
+    let id = setInterval(() => this.walkingAnimation(), 100);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
    * This function is just for the sound. It checks, if the chicken is visible on the canvas and then plays the sound.
    */
   checkObjectOnCanvas() {
-    setInterval(() => {
+    let id = setInterval(() => {
       const canvasLeftBoundary = world.camera_x * -1;
       const canvasRightBoundary = canvasLeftBoundary + 720;
 
@@ -49,6 +54,7 @@ class Chicken extends MovableObject {
         this.stopAudioWalking();
       }
     }, 1000);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**

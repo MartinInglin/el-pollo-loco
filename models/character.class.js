@@ -101,35 +101,25 @@ class Character extends MovableObject {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     this.intervalAnimation = null;
     this.keyboard = keyboard;
-    this.health = 100;
+    this.health = 20;
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesJumping);
     this.loadImages(this.imagesIdle);
     this.loadImages(this.imagesIdleLong);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDie);
-    this.checkWorldExistence().then(() => {
-    this.applyGravity();
-    this.moveCamera();
-    this.moveCharacter();
-    this.characterWalkAnimation();
-    this.jump();
-    this.jumpAnimation();
-    this.idleAnimation();
-    this.animationIsHurt();
-    this.animationDie();
-    this.endLevelReached();
-  });
-  }
 
-  checkWorldExistence() {
-    return new Promise((resolve) => {
-      const checkInterval = setInterval(() => {
-        if (typeof world !== "undefined" && world !== null) {
-          clearInterval(checkInterval);
-          resolve();
-        }
-      }, 100);
+    checkWorldExistence().then(() => {
+      this.applyGravity();
+      this.moveCamera();
+      this.moveCharacter();
+      this.characterWalkAnimation();
+      this.jump();
+      this.jumpAnimation();
+      this.idleAnimation();
+      this.animationIsHurt();
+      this.animationDie();
+      this.endLevelReached();
     });
   }
 
@@ -137,7 +127,7 @@ class Character extends MovableObject {
    * This function moves the camera with the character and stops moving at the end of the level. It needs to be in sync with the function moveCharacter and the interval must be the same. Otherwise the character will flicker.
    */
   moveCamera() {
-    world.intervals.character.intervalMoveCamera = setInterval(() => {
+    let id = setInterval(() => {
       if (this.x <= 300) {
         world.camera_x = 0;
       }
@@ -145,13 +135,14 @@ class Character extends MovableObject {
         world.camera_x = 300 - this.x;
       }
     }, 40);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
    * This function moves the character. It is checks frequently if the player presses left, right or up on the keyboard by checking the corresponding variables form the keyboard. It must be in sync with the "moveCamera" function.
    */
   moveCharacter() {
-    world.intervals.character.intervalCheckLeftRight = setInterval(() => {
+    let id = setInterval(() => {
       if (this.keyboard.LEFT && !this.endLevelLeftReached) {
         this.moveLeft();
         this.characterMovedLeft = true;
@@ -166,13 +157,14 @@ class Character extends MovableObject {
         this.stopCharacter();
       }
     }, 40);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
    * This function checks if the player presses any of the left, right or up buttons. In case it starts the animation and flips the image if the character changes direction.
    */
   characterWalkAnimation() {
-    world.intervals.character.intervalCheckLeftRightAnimation = setInterval(() => {
+    let id = setInterval(() => {
       if (this.keyboard.LEFT && !this.jumpAnimationStarted && !this.isHurt) {
         this.otherDirection = true;
         this.startAnimationWalking();
@@ -185,6 +177,7 @@ class Character extends MovableObject {
         this.stopAudioWalking();
       }
     }, 70);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -214,7 +207,7 @@ class Character extends MovableObject {
       currentImageIndexIdleLong: 0,
     };
 
-    world.intervals.character.intervalCheckIdleAnimation = setInterval(() => {
+    let id = setInterval(() => {
       if (this.playerPressAnyKey()) {
         this.iterationCountIdleAnimation = 0;
         this.characterSleep = false;
@@ -231,6 +224,7 @@ class Character extends MovableObject {
         this.characterStartSleeping(state);
       }
     }, 500);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -289,12 +283,13 @@ class Character extends MovableObject {
    * This function contains the movement of the character when he jumps. By increasing the amount of speedY the character jumps higher. It then plays the corresponding audio.
    */
   jump() {
-    world.intervals.character.intervalCheckJump = setInterval(() => {
+    let id = setInterval(() => {
       if (this.keyboard.UP && !this.isAboveGround()) {
         this.speedY = 25;
         this.playAudioJump();
       }
     }, 60);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -313,7 +308,7 @@ class Character extends MovableObject {
       currentIndex: 0,
     };
 
-    world.intervals.character.intervalCheckJumpAnimation = setInterval(() => {
+    let id = setInterval(() => {
       if (this.playerPressUpOrAnimationJumpRunning()) {
         this.jumpAnimationStarted = true;
         if (this.jumpAnimationNotFinished(state.currentIndex)) {
@@ -324,6 +319,7 @@ class Character extends MovableObject {
         }
       }
     }, 50);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -383,10 +379,11 @@ class Character extends MovableObject {
    * This function sets the interval to check if the player is at the end of the level.
    */
   endLevelReached() {
-    world.intervals.character.intervalLevelEndReached = setInterval(() => {
+    let id = setInterval(() => {
       this.checkEndWorldLeft();
       this.checkEndWorldRight();
     }, 40);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -414,7 +411,7 @@ class Character extends MovableObject {
   animationIsHurt() {
     let previousHealth = this.health;
     let currentIndexHurt = 0;
-    world.intervals.character.intervalIsHurt = setInterval(() => {
+    let id = setInterval(() => {
       if (this.health < previousHealth && this.health > 20) {
         this.isHurt = true;
         if (currentIndexHurt < this.imagesHurt.length) {
@@ -429,6 +426,7 @@ class Character extends MovableObject {
         }
       }
     }, 100);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   resetIdleAnimation() {
@@ -440,13 +438,13 @@ class Character extends MovableObject {
     let currentIndexDie = 0;
     setInterval(() => {
       if (this.health <= 0) {
-        world.clearAllIntervals()
         if (currentIndexDie < this.imagesDie.length) {
           const imagePath = this.imagesDie[currentIndexDie];
           this.img = this.imageCache[imagePath];
           currentIndexDie++;
         } else {
           this.img = this.imageCache["img/2_character_pepe/5_dead/D-57.png"];
+          world.stopAllIntervals();
         }
       }
     }, 100);

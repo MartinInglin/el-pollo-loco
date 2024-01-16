@@ -4,29 +4,23 @@ class RectangleCharacter {
     y;
     width;
     height;
+    intervalIds = [];
   
     constructor() {
-      this.checkWorldExistence();
-
-    }
-  
-    checkWorldExistence() {
-      const checkInterval = setInterval(() => {
-        if (typeof world !== "undefined" && world !== null) {
-          this.character = world.character;
-          this.getPositionCharacter();
-          clearInterval(checkInterval);
-          this.height = this.character.height -100;
-          this.width = this.character.width - 80;
-        }
-      }, 100);
+      checkWorldExistence().then(() => {
+        this.character = world.character;
+        this.getPositionCharacter();
+        this.height = this.character.height -100;
+        this.width = this.character.width - 80;
+    });
     }
   
     getPositionCharacter() {
-      setInterval(() => {
+      let id = setInterval(() => {
         this.x = this.character.x + 30;
         this.y = this.character.y + 90;
       }, 40);
+      this.intervalIds.push(id);
     }
   }
   

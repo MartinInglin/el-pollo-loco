@@ -4,19 +4,24 @@ class RectanglesCollision {
   rectanglesCoins;
   collisonDetected = false;
   hurtTimeout = null;
+  intervalIdsRectanglesCollision = [];
 
   constructor() {
     this.rectangleCharacter = [new RectangleCharacter()];
     this.rectanglesEnemies = level1.enemies.map((enemy) => new RectangleEnemy(enemy));
     this.rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
+
+    checkWorldExistence().then(() => {
     this.checkCollisions();
+  });
   }
 
   checkCollisions() {
-    setInterval(() => {
+    let id = setInterval(() => {
       this.isCollidingEnemy();
       this.isCollidingCoin();
     }, 200);
+    this.intervalIdsRectanglesCollision.push(id);
   }
 
   isCollidingEnemy() {
@@ -54,6 +59,10 @@ class RectanglesCollision {
         this.collisionDetected = false;
       }, 1000);
     }
+  }
+
+  stopIntervalsCollsion() {
+    this.intervalIdsRectanglesCollision.forEach(clearInterval);
   }
   
 }
