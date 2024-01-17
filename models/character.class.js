@@ -102,7 +102,7 @@ class Character extends MovableObject {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     this.intervalAnimation = null;
     this.keyboard = keyboard;
-    this.health = 20;
+    this.health = 100;
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesJumping);
     this.loadImages(this.imagesIdle);
