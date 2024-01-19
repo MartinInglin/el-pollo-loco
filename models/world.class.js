@@ -64,18 +64,28 @@ class World {
     }
   }
 
+  /**
+   * This function add the rectangles to the map that are used for the collision.
+   * 
+   * @param {array} rectangles - Contains the objects for the rectangles.
+   */
   addRectanglesToMap(rectangles) {
     rectangles.forEach((rectangle) => {
       this.addRectangleToMap(rectangle);
     });
   }
 
-  addRectangleToMap(rectanglesCollision) {
+  /**
+   * This function draws the rectangle on the canvas.
+   * 
+   * @param {object} rectangleCollision - The object of the rectangle that is drawn.
+   */
+  addRectangleToMap(rectangleCollision) {
     this.ctx.beginPath();
-    this.ctx.rect(rectanglesCollision.x, rectanglesCollision.y, rectanglesCollision.width, rectanglesCollision.height);
-    this.ctx.lineWidth = 5; // Set the width of the stroke
-    this.ctx.strokeStyle = "blue"; // Set the color of the stroke
-    this.ctx.stroke(); // Draw the rectangle outline
+    this.ctx.rect(rectangleCollision.x, rectangleCollision.y, rectangleCollision.width, rectangleCollision.height);
+    this.ctx.lineWidth = 5;
+    this.ctx.strokeStyle = "blue";
+    this.ctx.stroke();
     this.ctx.closePath();
   }
 
@@ -101,6 +111,9 @@ class World {
     this.ctx.restore();
   }
 
+  /**
+   * This function stops all relevant Intervals of the game. Relevant means the player would notice if it keeps running. The function calls functions in the corresponding objects.
+   */
   stopAllIntervals() {
     this.rectanglesCollision.stopIntervalsCollsion();
 

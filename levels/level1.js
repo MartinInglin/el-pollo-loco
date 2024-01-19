@@ -8,11 +8,10 @@ const level1 = {
     new ChickenSmall(),
     new Endboss(),
   ],
-  clouds: [new Cloud(1), new Cloud(2), new Cloud(3)],
-  coins: [new Coin(), new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
+  clouds: [new Cloud(0), new Cloud(1), new Cloud(2)],
+  coins: [new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
   backgroundObjects: [],
   backgroundReproductionCountX: 3,
-  //backgroundImagePaths: ["air", "3_third_layer/", "2_second_layer/", "1_first_layer/"],
   backgroundImagePaths: [
     [
       "img/5_background/layers/air.png",

@@ -18,6 +18,9 @@ class Level {
     this.loadBackgroundImages();
   }
 
+  /**
+   * This function pushes the images of the background into the array backgroundObjects.
+   */
   loadBackgroundImages() {
     for (let i = 0; i < this.backgroundReproductionCountX; i++) {
       let setOfLayers = i % 2;

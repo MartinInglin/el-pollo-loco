@@ -12,32 +12,52 @@ class RectanglesCollision {
     this.rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
 
     checkWorldExistence().then(() => {
-    this.checkCollisions();
-  });
+      this.checkCollisions();
+    });
   }
 
   checkCollisions() {
     let id = setInterval(() => {
       this.isCollidingEnemy();
       this.isCollidingCoin();
-    }, 200);
+    }, 40);
     this.intervalIdsRectanglesCollision.push(id);
   }
 
   isCollidingEnemy() {
     this.rectanglesEnemies.forEach((enemy) => {
-      if (this.isCollidingObject(enemy)) {
+      if (world.character.isAboveGround() && this.isCollidingObject(enemy) && world.character.speedY < 0) {
+        enemy.enemy.health = 0;
+        this.destroyRectangleEnemy(enemy);
+      } else if (this.isCollidingObject(enemy)) {
         this.characterIsHurt();
-        this.characterIsDead()
+        this.characterIsDead();
       }
     });
   }
 
+  destroyRectangleEnemy(enemy) {
+    const index = world.rectanglesCollision.rectanglesEnemies.indexOf(enemy);
+    if (index !== -1) {
+        world.rectanglesCollision.rectanglesEnemies.splice(index, 1);
+    }
+}
+
   isCollidingCoin() {
     this.rectanglesCoins.forEach((coin) => {
       if (this.isCollidingObject(coin)) {
+        coin.coin.health = 0;
+          world.character.coinsCollected += 1;
+        this.destroyRectangleCoin(coin);
       }
     });
+  }
+
+  destroyRectangleCoin(coin) {
+    const index = world.rectanglesCollision.rectanglesCoins.indexOf(coin);
+    if (index !== -1) {
+        world.rectanglesCollision.rectanglesCoins.splice(index, 1);
+    }
   }
 
   isCollidingObject(object) {
@@ -52,10 +72,9 @@ class RectanglesCollision {
   characterIsHurt() {
     if (!this.collisionDetected) {
       this.collisionDetected = true;
-  
+
       world.character.health -= 20;
-      console.log(world.character.health);
-  
+
       this.hurtTimeout = setTimeout(() => {
         this.collisionDetected = false;
       }, 1000);
@@ -71,5 +90,4 @@ class RectanglesCollision {
   stopIntervalsCollsion() {
     this.intervalIdsRectanglesCollision.forEach(clearInterval);
   }
-  
 }

@@ -82,7 +82,6 @@ class Character extends MovableObject {
     "img/2_character_pepe/5_dead/D-54.png",
     "img/2_character_pepe/5_dead/D-55.png",
     "img/2_character_pepe/5_dead/D-56.png",
-    "img/2_character_pepe/5_dead/D-57.png",
   ];
   AUDIO_WALKING = new Audio("audio/quick-run-cartoony.mp3");
   AUDIO_JUMP = new Audio("audio/jumps-on-the-floor.mp3");
@@ -97,12 +96,12 @@ class Character extends MovableObject {
   iterationCountIdleAnimation = 0;
   isHurt = false;
   idWalkAnimation;
+  coinsCollected = 0;
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     this.intervalAnimation = null;
     this.keyboard = keyboard;
-    this.health = 100;
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imagesJumping);
     this.loadImages(this.imagesIdle);
@@ -159,6 +158,22 @@ class Character extends MovableObject {
       }
     }, 40);
     this.intervalIdsMovableObjects.push(id);
+  }
+
+  /**
+   * This function is called after the player releases the left or right button. The character slides for a little longer. Therefore the two variables characterMovedLeft and -Right are used to see if the character hase moved before.
+   */
+  stopCharacter() {
+    if (this.speedX >= 0) {
+      if (this.characterMovedLeft) {
+        this.x -= this.speedX;
+        this.speedX -= this.acceleration;
+      }
+      if (this.characterMovedRight) {
+        this.x += this.speedX;
+        this.speedX -= this.acceleration;
+      }
+    }
   }
 
   /**
@@ -409,32 +424,71 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * This function starts the interval that checks if the character is hurt. This happens if health of the character decreases.
+   */
   animationIsHurt() {
-    let previousHealth = this.health;
-    let currentIndexHurt = 0;
+    let animationState = {
+      currentIndexHurt: 0,
+      previousHealth: this.health,
+    };
     let id = setInterval(() => {
-      if (this.health < previousHealth && this.health > 20) {
+      if (this.healthCharacterDecreases(animationState.previousHealth)) {
         this.isHurt = true;
-        if (currentIndexHurt < this.imagesHurt.length) {
-          const imagePath = this.imagesHurt[currentIndexHurt];
-          this.img = this.imageCache[imagePath];
-          currentIndexHurt++;
-        } else {
-          this.isHurt = false;
-          this.resetIdleAnimation();
-          currentIndexHurt = 0;
-          previousHealth = this.health;
-        }
+        this.startHurtAnimation(animationState);
       }
     }, 100);
     this.intervalIdsMovableObjects.push(id);
   }
 
+  /**
+   * This function checks if health of the character decreases.
+   *
+   * @param {number} previousHealth - Previous health is stored to compare with actual health of the character.
+   * @returns boolean
+   */
+  healthCharacterDecreases(previousHealth) {
+    return this.health < previousHealth && this.health > 20;
+  }
+
+  /**
+   * This is the actual hurt animation.
+   *
+   * @param {object} animationState - Object that conatains currentIndexHurt and previousHealt. Both variables are passed to stopHurtAnimation() and changed there.
+   */
+  startHurtAnimation(animationState) {
+    if (animationState.currentIndexHurt < this.imagesHurt.length) {
+      const imagePath = this.imagesHurt[animationState.currentIndexHurt];
+      this.img = this.imageCache[imagePath];
+      animationState.currentIndexHurt++;
+    } else {
+      this.stopHurtAnimation(animationState);
+    }
+  }
+
+  /**
+   * This function stops the hurt animation and resets the idle animation.
+   *
+   * @param {object} animationState - Object that conatains currentIndexHurt and previousHealt. Both variables are changed in this function and must be returned to animationIsHurt().
+   */
+  stopHurtAnimation(animationState) {
+    this.isHurt = false;
+    this.resetIdleAnimation();
+    animationState.currentIndexHurt = 0;
+    animationState.previousHealth = this.health;
+  }
+
+  /**
+   * This function resets the idle animation. The character starts blinking again after beeing hurt or wakes up if he was sleeping.
+   */
   resetIdleAnimation() {
     this.characterSleep = false;
     this.iterationCountIdleAnimation = 0;
   }
 
+  /**
+   *This function contains the dying animation of the character. After showing the whole array of the images it displays the last image of the character forever.
+   */
   animationDie() {
     let currentIndexDie = 0;
     setInterval(() => {
@@ -444,9 +498,16 @@ class Character extends MovableObject {
           this.img = this.imageCache[imagePath];
           currentIndexDie++;
         } else {
-          this.img = this.imageCache["img/2_character_pepe/5_dead/D-57.png"];
+          this.setLastImageCharacter();
         }
       }
     }, 100);
+  }
+
+  /**
+   * This function sets the last image of the character.
+   */
+  setLastImageCharacter() {
+    this.img = this.imageCache["img/2_character_pepe/5_dead/D-56.png"];
   }
 }

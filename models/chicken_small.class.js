@@ -9,15 +9,20 @@ class ChickenSmall extends MovableObject {
     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
   ];
+  imageDead = [
+    "img/3_enemies_chicken/chicken_small/2_dead/dead.png",
+  ]
   AUDIO_BWACK = new Audio("audio/bwack.mp3");
 
   constructor() {
     super().loadImage(this.imageResting[0]);
     this.loadImages(this.imagesWalking);
+    this.loadImages(this.imageDead);
     this.x = Math.random() * (1500 - 700) + 700;
 
     checkWorldExistence().then(() => {
     this.startMovingTowardsCharacter();
+    this.enemyDies()
     });
   }
 
