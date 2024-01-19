@@ -10,6 +10,7 @@ const level1 = {
   ],
   clouds: [new Cloud(0), new Cloud(1), new Cloud(2)],
   coins: [new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
+  bottles: [new Bottle()],
   backgroundObjects: [],
   backgroundReproductionCountX: 3,
   backgroundImagePaths: [

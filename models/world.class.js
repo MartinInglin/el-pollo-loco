@@ -6,6 +6,7 @@ class World {
   camera_x = 0;
   level = new Level(level1);
   rectanglesCollision = new RectanglesCollision();
+  statusbars = [new StatusbarHealthCharacter(), new StatusbarCoins(), new StatusbarBottles()];
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -26,11 +27,16 @@ class World {
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.coins);
-    this.addRectanglesToMap(this.rectanglesCollision.rectangleCharacter);
-    this.addRectanglesToMap(this.rectanglesCollision.rectanglesEnemies);
-    this.addRectanglesToMap(this.rectanglesCollision.rectanglesCoins);
+    this.addObjectsToMap(this.level.bottles)
+
+    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectangleCharacter);
+    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesEnemies);
+    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesCoins);
+    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottles);
 
     this.ctx.translate(-this.camera_x, 0);
+
+    this.addStatusbarsToMap(this.statusbars);
 
     let self = this;
     requestAnimationFrame(() => {
@@ -65,31 +71,6 @@ class World {
   }
 
   /**
-   * This function add the rectangles to the map that are used for the collision.
-   * 
-   * @param {array} rectangles - Contains the objects for the rectangles.
-   */
-  addRectanglesToMap(rectangles) {
-    rectangles.forEach((rectangle) => {
-      this.addRectangleToMap(rectangle);
-    });
-  }
-
-  /**
-   * This function draws the rectangle on the canvas.
-   * 
-   * @param {object} rectangleCollision - The object of the rectangle that is drawn.
-   */
-  addRectangleToMap(rectangleCollision) {
-    this.ctx.beginPath();
-    this.ctx.rect(rectangleCollision.x, rectangleCollision.y, rectangleCollision.width, rectangleCollision.height);
-    this.ctx.lineWidth = 5;
-    this.ctx.strokeStyle = "blue";
-    this.ctx.stroke();
-    this.ctx.closePath();
-  }
-
-  /**
    * This function flips the image in case the player moves its character to the left side of the screen.
    *
    * @param {object} movableObject - All kind of objects such as the character, enemies or background objects.
@@ -109,6 +90,41 @@ class World {
   flipImageBack(movableObject) {
     movableObject.x = movableObject.x * -1;
     this.ctx.restore();
+  }
+
+  addStatusbarsToMap(statusbars) {
+    statusbars.forEach((statusbar) => {
+      this.addStatusbarToMap(statusbar);
+    });
+  }
+
+  addStatusbarToMap(statusbar) {
+    this.ctx.drawImage(statusbar.img, statusbar.x, statusbar.y, statusbar.width, statusbar.height);
+  }
+
+  /**
+   * This function add the rectangles to the map that are used for the collision.
+   *
+   * @param {array} rectangles - Contains the objects for the rectangles.
+   */
+  addRectanglesCollisionToMap(rectangles) {
+    rectangles.forEach((rectangle) => {
+      this.addRectangleCollisionToMap(rectangle);
+    });
+  }
+
+  /**
+   * This function draws the rectangle on the canvas.
+   *
+   * @param {object} rectangleCollision - The object of the rectangle that is drawn.
+   */
+  addRectangleCollisionToMap(rectangleCollision) {
+    this.ctx.beginPath();
+    this.ctx.rect(rectangleCollision.x, rectangleCollision.y, rectangleCollision.width, rectangleCollision.height);
+    this.ctx.lineWidth = 0;
+    this.ctx.strokeStyle = "transparent";
+    this.ctx.stroke();
+    this.ctx.closePath();
   }
 
   /**

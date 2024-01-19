@@ -83,6 +83,14 @@ class Character extends MovableObject {
     "img/2_character_pepe/5_dead/D-55.png",
     "img/2_character_pepe/5_dead/D-56.png",
   ];
+  imagesMiniJump = [
+    "img/2_character_pepe/3_jump/J-36.png",
+    "img/2_character_pepe/3_jump/J-37.png",
+    "img/2_character_pepe/3_jump/J-37.png",
+    "img/2_character_pepe/3_jump/J-37.png",
+    "img/2_character_pepe/3_jump/J-38.png",
+    "img/2_character_pepe/3_jump/J-39.png",
+  ]
   AUDIO_WALKING = new Audio("audio/quick-run-cartoony.mp3");
   AUDIO_JUMP = new Audio("audio/jumps-on-the-floor.mp3");
   speed = 10;
@@ -97,6 +105,7 @@ class Character extends MovableObject {
   isHurt = false;
   idWalkAnimation;
   coinsCollected = 0;
+  bottlesCollected = 0;
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
@@ -115,7 +124,7 @@ class Character extends MovableObject {
       this.moveCharacter();
       this.characterWalkAnimation();
       this.jump();
-      this.jumpAnimation();
+      this.jumpAnimation(0);
       this.idleAnimation();
       this.animationIsHurt();
       this.animationDie();
@@ -319,13 +328,14 @@ class Character extends MovableObject {
   /**
    *This function executes the jump animation. It checks if the player pressed the up button or the animation is already running because it should not stop if the player releases the key. When the animation ran through completely it is reset and the jump audio plays again for the landing.
    */
-  jumpAnimation() {
+  jumpAnimation(initialIndex) {
     let state = {
-      currentIndex: 0,
+      currentIndex: initialIndex,
     };
 
     let id = setInterval(() => {
       if (this.playerPressUpOrAnimationJumpRunning()) {
+        console.log(state.currentIndex)
         this.jumpAnimationStarted = true;
         if (this.jumpAnimationNotFinished(state.currentIndex)) {
           this.characterJumpAnimation(state);
@@ -367,6 +377,11 @@ class Character extends MovableObject {
    */
   jumpAnimationNotFinished(currentIndex) {
     return currentIndex < this.imagesJumping.length;
+  }
+
+  miniJump() {
+    this.speedY = 10;
+    this.jumpAnimation(5)
   }
 
   /**

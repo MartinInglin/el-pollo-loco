@@ -1,16 +1,13 @@
 class RectanglesCollision {
-  rectangleCharacter;
-  rectanglesEnemies;
-  rectanglesCoins;
+  rectangleCharacter = [new RectangleCharacter()];
+  rectanglesEnemies = level1.enemies.map((enemy) => new RectangleEnemy(enemy));
+  rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
+  rectanglesBottles = level1.bottles.map((bottle) => new RectangleBottle(bottle));
   collisonDetected = false;
   hurtTimeout = null;
   intervalIdsRectanglesCollision = [];
 
   constructor() {
-    this.rectangleCharacter = [new RectangleCharacter()];
-    this.rectanglesEnemies = level1.enemies.map((enemy) => new RectangleEnemy(enemy));
-    this.rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
-
     checkWorldExistence().then(() => {
       this.checkCollisions();
     });
@@ -20,6 +17,7 @@ class RectanglesCollision {
     let id = setInterval(() => {
       this.isCollidingEnemy();
       this.isCollidingCoin();
+      this.isCollidingBottle();
     }, 40);
     this.intervalIdsRectanglesCollision.push(id);
   }
@@ -29,6 +27,7 @@ class RectanglesCollision {
       if (world.character.isAboveGround() && this.isCollidingObject(enemy) && world.character.speedY < 0) {
         enemy.enemy.health = 0;
         this.destroyRectangleEnemy(enemy);
+        world.character.miniJump();
       } else if (this.isCollidingObject(enemy)) {
         this.characterIsHurt();
         this.characterIsDead();
@@ -57,6 +56,23 @@ class RectanglesCollision {
     const index = world.rectanglesCollision.rectanglesCoins.indexOf(coin);
     if (index !== -1) {
         world.rectanglesCollision.rectanglesCoins.splice(index, 1);
+    }
+  }
+
+  isCollidingBottle() {
+    this.rectanglesBottles.forEach((bottle) => {
+      if (this.isCollidingObject(bottle) && world.character.bottlesCollected < 5) {
+        bottle.bottle.health = 0;
+          world.character.bottlesCollected += 1;
+        this.destroyRectangleBottle(bottle);
+      }
+    });
+  }
+
+  destroyRectangleBottle(bottle) {
+    const index = world.rectanglesCollision.rectanglesBottles.indexOf(bottle);
+    if (index !== -1) {
+        world.rectanglesCollision.rectanglesBottles.splice(index, 1);
     }
   }
 

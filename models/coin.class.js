@@ -13,7 +13,6 @@ class Coin extends MovableObject {
   coinCollected() {
     let id = setInterval(() => {
       if (this.health === 0) {
-        //this.stopIntervalsMovableObjects();
         this.coinDisappersAnimation();
         this.deleteCoin();
       }
