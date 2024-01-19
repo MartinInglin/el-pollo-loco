@@ -1,18 +1,18 @@
 const level1 = {
   enemies: [
-    new Chicken(),
-    new Chicken(),
-    new Chicken(),
-    new ChickenSmall(),
-    new ChickenSmall(),
-    new ChickenSmall(),
+    new Chicken(800),
+    new Chicken(1400),
+    new Chicken(1500),
+    new ChickenSmall(1000),
+    new ChickenSmall(1200),
+    new ChickenSmall(1500),
     new Endboss(),
   ],
   clouds: [new Cloud(0), new Cloud(1), new Cloud(2)],
-  coins: [new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
-  bottles: [new Bottle()],
+  coins: [new Coin(300), new Coin(400), new Coin(1200), new Coin(1600), new Coin(1700)],
+  bottles: [new Bottle(700), new Bottle(1000), new Bottle(1550)],
   backgroundObjects: [],
-  backgroundReproductionCountX: 3,
+  backgroundReproductionCountX: 4,
   backgroundImagePaths: [
     [
       "img/5_background/layers/air.png",

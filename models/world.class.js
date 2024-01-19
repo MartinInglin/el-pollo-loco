@@ -24,7 +24,6 @@ class World {
 
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
-    this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles)
@@ -33,6 +32,8 @@ class World {
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesEnemies);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesCoins);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottles);
+
+    this.addToMap(this.character);
 
     this.ctx.translate(-this.camera_x, 0);
 

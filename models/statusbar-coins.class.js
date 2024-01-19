@@ -8,11 +8,12 @@ class StatusbarCoins extends Statusbars {
     "img/7_statusbars/1_statusbar/1_statusbar_coin/green/100.png",
   ];
   img;
+  x = 24;
+  y = 24;
 
   constructor() {
     super().loadImage("img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png");
     this.loadImages(this.images);
-    this.y = 50;
 
     checkWorldExistence().then(() => {
       this.changeStatusbar();
@@ -20,20 +21,9 @@ class StatusbarCoins extends Statusbars {
   }
 
   changeStatusbar() {
-    let currentIndexStatusbar = 0;
-    let previousAmountCoins = world.character.coinsCollected;
-
     let id = setInterval(() => {
-      if (this.amountCoinsIncreases(previousAmountCoins) && currentIndexStatusbar < this.images.length - 1) {
-        currentIndexStatusbar++;
-        previousAmountCoins = world.character.coinsCollected;
-        this.img = this.imageCache[this.images[currentIndexStatusbar]];
-      }
+      this.img = this.imageCache[this.images[world.character.coinsCollected]];
     }, 100);
     this.intervalsStatusbar.push(id);
-  }
-
-  amountCoinsIncreases(previousAmountCoins) {
-    return world.character.coinsCollected > previousAmountCoins;
   }
 }

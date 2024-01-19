@@ -1,5 +1,5 @@
 class Statusbars {
-  x = 20;
+  x;
   y;
   height = 65;
   width = 250;

@@ -38,15 +38,17 @@ class RectanglesCollision {
   destroyRectangleEnemy(enemy) {
     const index = world.rectanglesCollision.rectanglesEnemies.indexOf(enemy);
     if (index !== -1) {
-        world.rectanglesCollision.rectanglesEnemies.splice(index, 1);
+      world.rectanglesCollision.rectanglesEnemies.splice(index, 1);
     }
-}
+  }
 
   isCollidingCoin() {
     this.rectanglesCoins.forEach((coin) => {
       if (this.isCollidingObject(coin)) {
         coin.coin.health = 0;
+        if (world.character.coinsCollected < 5) {
           world.character.coinsCollected += 1;
+        }
         this.destroyRectangleCoin(coin);
       }
     });
@@ -55,7 +57,7 @@ class RectanglesCollision {
   destroyRectangleCoin(coin) {
     const index = world.rectanglesCollision.rectanglesCoins.indexOf(coin);
     if (index !== -1) {
-        world.rectanglesCollision.rectanglesCoins.splice(index, 1);
+      world.rectanglesCollision.rectanglesCoins.splice(index, 1);
     }
   }
 
@@ -63,7 +65,9 @@ class RectanglesCollision {
     this.rectanglesBottles.forEach((bottle) => {
       if (this.isCollidingObject(bottle) && world.character.bottlesCollected < 5) {
         bottle.bottle.health = 0;
+        if (world.character.bottlesCollected < 5) {
           world.character.bottlesCollected += 1;
+        }
         this.destroyRectangleBottle(bottle);
       }
     });
@@ -72,7 +76,7 @@ class RectanglesCollision {
   destroyRectangleBottle(bottle) {
     const index = world.rectanglesCollision.rectanglesBottles.indexOf(bottle);
     if (index !== -1) {
-        world.rectanglesCollision.rectanglesBottles.splice(index, 1);
+      world.rectanglesCollision.rectanglesBottles.splice(index, 1);
     }
   }
 

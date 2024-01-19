@@ -2,6 +2,7 @@ class ChickenSmall extends MovableObject {
   height = 40;
   width = 40;
   y = 400;
+  x;
   speed = 10;
   imageResting = ["img/3_enemies_chicken/chicken_small/1_walk/2_w.png"];
   imagesWalking = [
@@ -14,11 +15,11 @@ class ChickenSmall extends MovableObject {
   ]
   AUDIO_BWACK = new Audio("audio/bwack.mp3");
 
-  constructor() {
+  constructor(xPosition) {
     super().loadImage(this.imageResting[0]);
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imageDead);
-    this.x = Math.random() * (1500 - 700) + 700;
+    this.x = xPosition;
 
     checkWorldExistence().then(() => {
     this.startMovingTowardsCharacter();
@@ -35,7 +36,7 @@ class ChickenSmall extends MovableObject {
     let id = setInterval(() => {
       if (world) {
         let distance = this.x - world.character.x;
-        if (distance < 400) {
+        if (distance < 200) {
           this.moveLeft();
           this.walkingAnimation();
           if (!audioPlayed) {

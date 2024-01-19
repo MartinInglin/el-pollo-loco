@@ -106,6 +106,7 @@ class Character extends MovableObject {
   idWalkAnimation;
   coinsCollected = 0;
   bottlesCollected = 0;
+  currentIndexJumpAnimation = 0;
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
@@ -124,7 +125,7 @@ class Character extends MovableObject {
       this.moveCharacter();
       this.characterWalkAnimation();
       this.jump();
-      this.jumpAnimation(0);
+      this.jumpAnimation();
       this.idleAnimation();
       this.animationIsHurt();
       this.animationDie();
@@ -328,19 +329,14 @@ class Character extends MovableObject {
   /**
    *This function executes the jump animation. It checks if the player pressed the up button or the animation is already running because it should not stop if the player releases the key. When the animation ran through completely it is reset and the jump audio plays again for the landing.
    */
-  jumpAnimation(initialIndex) {
-    let state = {
-      currentIndex: initialIndex,
-    };
-
+  jumpAnimation() {
     let id = setInterval(() => {
       if (this.playerPressUpOrAnimationJumpRunning()) {
-        console.log(state.currentIndex)
         this.jumpAnimationStarted = true;
-        if (this.jumpAnimationNotFinished(state.currentIndex)) {
-          this.characterJumpAnimation(state);
+        if (this.jumpAnimationNotFinished()) {
+          this.characterJumpAnimation();
         } else {
-          this.resetJumpAnimation(state);
+          this.resetJumpAnimation();
           this.AUDIO_JUMP.play();
         }
       }
@@ -350,14 +346,22 @@ class Character extends MovableObject {
 
   /**
    * This function executes the actual animation.
+  */
+  characterJumpAnimation() {
+    const imagePath = this.imagesJumping[this.currentIndexJumpAnimation];
+    this.img = this.imageCache[imagePath];
+    this.currentIndexJumpAnimation++;
+    this.flipImageInJump();
+  }
+
+  /**
+   * This function resets the jump animation.
    *
    * @param {object} state - This object contains the current index of the jump animation.
    */
-  characterJumpAnimation(state) {
-    const imagePath = this.imagesJumping[state.currentIndex];
-    this.img = this.imageCache[imagePath];
-    state.currentIndex++;
-    this.flipImageInJump();
+  resetJumpAnimation(state) {
+    this.jumpAnimationStarted = false;
+    this.currentIndexJumpAnimation = 0;
   }
 
   /**
@@ -375,13 +379,16 @@ class Character extends MovableObject {
    * @param {number} currentIndex - Number of the current Index of the image.
    * @returns boolean
    */
-  jumpAnimationNotFinished(currentIndex) {
-    return currentIndex < this.imagesJumping.length;
+  jumpAnimationNotFinished() {
+    return this.currentIndexJumpAnimation < this.imagesJumping.length;
   }
 
+  /**
+   * This function is executed after the character hits an enemy from top.
+   */
   miniJump() {
     this.speedY = 10;
-    this.jumpAnimation(5)
+    this.currentIndexJumpAnimation = 10;
   }
 
   /**
@@ -394,16 +401,6 @@ class Character extends MovableObject {
     if (this.keyboard.RIGHT) {
       this.otherDirection = false;
     }
-  }
-
-  /**
-   * This function resets the jump animation.
-   *
-   * @param {object} state - This object contains the current index of the jump animation.
-   */
-  resetJumpAnimation(state) {
-    this.jumpAnimationStarted = false;
-    state.currentIndex = 0;
   }
 
   /**

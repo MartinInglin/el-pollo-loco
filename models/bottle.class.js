@@ -15,14 +15,15 @@ class Bottle extends MovableObject {
     "img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
   y = 370;
-  x = 300;
+  x;
   height = 80;
   width = 80;
 
-  constructor() {
+  constructor(xPosition) {
     super().loadImage("img/6_salsa_bottle/2_salsa_bottle_on_ground.png");
     this.loadImages(this.imagesRotation);
     this.loadImages(this.imagesSplash);
+    this.x = xPosition;
 
     checkWorldExistence().then(() => {
       this.bottleCollected();

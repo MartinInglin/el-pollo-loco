@@ -9,17 +9,18 @@ class Chicken extends MovableObject {
   ]
 
   y = 370;
+  x;
   height = 80;
   width = 80;
   AUDIO_WALKING = new Audio("audio/chicken-cackling.mp3");
 
-  constructor() {
+  constructor(xPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imageDead);
 
-    this.x = 800 + Math.random() * 500;
-    this.speed = Math.random() * (0.5 - 0.1) + 0.1;
+    this.x = xPosition;
+    this.speed = 0.4;
 
     checkWorldExistence().then(() => {
     this.checkObjectOnCanvas();

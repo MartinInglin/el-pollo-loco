@@ -8,11 +8,12 @@ class StatusbarHealthCharacter extends Statusbars {
     "img/7_statusbars/1_statusbar/2_statusbar_health/orange/0.png",
   ];
   img;
+  x = 0;
+  y = 0;
 
   constructor() {
     super().loadImage("img/7_statusbars/1_statusbar/2_statusbar_health/green/100.png");
     this.loadImages(this.images);
-    this.y = 0;
 
     checkWorldExistence().then(() => {
       this.changeStatusbar();

@@ -8,11 +8,12 @@ class StatusbarBottles extends Statusbars{
     "img/7_statusbars/1_statusbar/3_statusbar_bottle/green/100.png",
   ];
   img;
+  x = 48;
+  y = 48;
 
   constructor() {
     super().loadImage("img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/0.png");
     this.loadImages(this.images);
-    this.y = 100;
 
     checkWorldExistence().then(() => {
       this.changeStatusbar();
@@ -20,20 +21,9 @@ class StatusbarBottles extends Statusbars{
   }
 
   changeStatusbar() {
-    let currentIndexStatusbar = 0;
-    let previousAmountBottles = world.character.bottlesCollected;
-
     let id = setInterval(() => {
-      if (this.amountCoinsIncreases(previousAmountBottles) && currentIndexStatusbar < this.images.length - 1) {
-        currentIndexStatusbar++;
-        previousAmountBottles = world.character.bottlesCollected;
-        this.img = this.imageCache[this.images[currentIndexStatusbar]];
-      }
+      this.img = this.imageCache[this.images[world.character.bottlesCollected]];
     }, 100);
     this.intervalsStatusbar.push(id);
-  }
-
-  amountCoinsIncreases(previousAmountBottles) {
-    return world.character.bottlesCollected > previousAmountBottles;
   }
 }
