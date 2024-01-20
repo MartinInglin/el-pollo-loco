@@ -42,7 +42,7 @@ class Chicken extends MovableObject {
    * This function executes the walking animation of the chicken.
    */
   chickenWalkingAnimation() {
-    let id = setInterval(() => this.walkingAnimation(), 100);
+    let id = setInterval(() => this.playContinuousAnimation(this.imagesWalking, "chickenWalking"), 100);
     this.intervalIdsMovableObjects.push(id);
   }
 

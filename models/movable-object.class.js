@@ -6,14 +6,21 @@ class MovableObject extends DrawableObject{
   width = 100;
   speed;
   otherDirection = false;
-  currentImageIndex = 0;
+  currentImageIndices = {
+    walking: 0,
+    idle: 0,
+    idleLong: 0,
+    chickenWalking: 0,
+    chickenSmallWalking: 0,
+    jump: 0,
+    hurt: 0,
+    die: 0,
+  };
   speedY = 0;
   speedX = 0;
   acceleration = 2;
   health = 100;
   intervalIdsMovableObjects = [];
-
-
 
   /**
    * This function moves any object to the left side. For the look there is an acceleration at the beginning of the movement because this feels more natural.
@@ -39,13 +46,22 @@ class MovableObject extends DrawableObject{
     }
   }
 
-  /**
-   * This function is the actual walking animation.
-   */
-  walkingAnimation() {
-    this.currentImageIndex = (this.currentImageIndex + 1) % this.imagesWalking.length;
-    const imagePath = this.imagesWalking[this.currentImageIndex];
+  playContinuousAnimation(imagesAnimation, animationType) {
+    let currentImageIndex = this.currentImageIndices[animationType];
+    currentImageIndex = (currentImageIndex + 1) % imagesAnimation.length;
+    this.currentImageIndices[animationType] = currentImageIndex;
+    const imagePath = imagesAnimation[currentImageIndex];
     this.img = this.imageCache[imagePath];
+  }
+
+  playSingleRunAnimation(imagesAnimation, animationType) {
+    let currentImageIndex = this.currentImageIndices[animationType];
+  
+    if (currentImageIndex < imagesAnimation.length) {
+      const imagePath = imagesAnimation[currentImageIndex];
+      this.img = this.imageCache[imagePath];
+      this.currentImageIndices[animationType]++;
+    }
   }
 
   /**

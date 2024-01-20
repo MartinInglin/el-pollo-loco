@@ -90,7 +90,7 @@ class Character extends MovableObject {
     "img/2_character_pepe/3_jump/J-37.png",
     "img/2_character_pepe/3_jump/J-38.png",
     "img/2_character_pepe/3_jump/J-39.png",
-  ]
+  ];
   AUDIO_WALKING = new Audio("audio/quick-run-cartoony.mp3");
   AUDIO_JUMP = new Audio("audio/jumps-on-the-floor.mp3");
   speed = 10;
@@ -106,7 +106,7 @@ class Character extends MovableObject {
   idWalkAnimation;
   coinsCollected = 0;
   bottlesCollected = 0;
-  currentIndexJumpAnimation = 0;
+  previousHealth = 100;
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
@@ -213,7 +213,7 @@ class Character extends MovableObject {
     this.AUDIO_WALKING.loop = true;
     this.AUDIO_WALKING.volume = 0.2;
     this.AUDIO_WALKING.play();
-    this.walkingAnimation();
+    this.playContinuousAnimation(this.imagesWalking, "walking");
   }
 
   /**
@@ -224,15 +224,7 @@ class Character extends MovableObject {
     this.AUDIO_WALKING.currentTime = 0;
   }
 
-  /**
-   * This function starts the idle animation if the player does not press any key. After three cycles of Pepe closing his eyes, pepe falls asleep. "let state" is needed because functions create a copy of the variable if passed on. So I needed to create an object therefore.
-   */
   idleAnimation() {
-    let state = {
-      currentImageIndexIdle: 0,
-      currentImageIndexIdleLong: 0,
-    };
-
     let id = setInterval(() => {
       if (this.playerPressAnyKey()) {
         this.iterationCountIdleAnimation = 0;
@@ -240,14 +232,14 @@ class Character extends MovableObject {
       }
 
       if (this.playerDontPressAnyKeyNoSleeping()) {
-        this.characterStartBlinking(state);
+        this.characterStartBlinking();
         if (this.after3CyclesBlinking()) {
           this.characterSleep = true;
         }
       }
 
       if (this.characterSleep) {
-        this.characterStartSleeping(state);
+        this.characterStartSleeping();
       }
     }, 500);
     this.intervalIdsMovableObjects.push(id);
@@ -271,17 +263,8 @@ class Character extends MovableObject {
     return !this.keyboard.LEFT && !this.keyboard.RIGHT && !this.jumpAnimationStarted && !this.characterSleep;
   }
 
-  /**
-   * This function starts the blinking animation of the character.
-   *
-   * @param {object} state - Contains several variables defined in the function idleAnimation.
-   */
-  characterStartBlinking(state) {
-    const currentImageIndexIdle = state.currentImageIndexIdle;
-    this.img = this.imageCache[this.imagesIdle[currentImageIndexIdle]];
-    state.currentImageIndexIdle = (currentImageIndexIdle + 1) % this.imagesIdle.length;
-    const imagePath = this.imagesIdle[state.currentImageIndexIdle];
-    this.img = this.imageCache[imagePath];
+  characterStartBlinking() {
+    this.playContinuousAnimation(this.imagesIdle, "idle");
     this.iterationCountIdleAnimation++;
   }
 
@@ -294,15 +277,8 @@ class Character extends MovableObject {
     return this.iterationCountIdleAnimation >= this.imagesIdle.length * 3;
   }
 
-  /**
-   * This function starts the sleeping animation of the character.
-   *
-   * @param {object} state - Contains several variables defined in the function idleAnimation.
-   */
-  characterStartSleeping(state) {
-    state.currentImageIndexIdleLong = (state.currentImageIndexIdleLong + 1) % this.imagesIdleLong.length;
-    const imagePath = this.imagesIdleLong[state.currentImageIndexIdleLong];
-    this.img = this.imageCache[imagePath];
+  characterStartSleeping() {
+    this.playContinuousAnimation(this.imagesIdleLong, "idleLong");
   }
 
   /**
@@ -344,24 +320,14 @@ class Character extends MovableObject {
     this.intervalIdsMovableObjects.push(id);
   }
 
-  /**
-   * This function executes the actual animation.
-  */
   characterJumpAnimation() {
-    const imagePath = this.imagesJumping[this.currentIndexJumpAnimation];
-    this.img = this.imageCache[imagePath];
-    this.currentIndexJumpAnimation++;
+    this.playSingleRunAnimation(this.imagesJumping, "jump")
     this.flipImageInJump();
   }
 
-  /**
-   * This function resets the jump animation.
-   *
-   * @param {object} state - This object contains the current index of the jump animation.
-   */
-  resetJumpAnimation(state) {
+  resetJumpAnimation() {
     this.jumpAnimationStarted = false;
-    this.currentIndexJumpAnimation = 0;
+    this.currentImageIndices.jump = 0;
   }
 
   /**
@@ -373,14 +339,8 @@ class Character extends MovableObject {
     return this.keyboard.UP || this.jumpAnimationStarted;
   }
 
-  /**
-   * This function checks if the jump animation has ran through completely.
-   *
-   * @param {number} currentIndex - Number of the current Index of the image.
-   * @returns boolean
-   */
   jumpAnimationNotFinished() {
-    return this.currentIndexJumpAnimation < this.imagesJumping.length;
+    return this.currentImageIndices.jump < this.imagesJumping.length;
   }
 
   /**
@@ -388,7 +348,7 @@ class Character extends MovableObject {
    */
   miniJump() {
     this.speedY = 10;
-    this.currentIndexJumpAnimation = 10;
+    this.currentImageIndices.jump = 10;
   }
 
   /**
@@ -436,58 +396,33 @@ class Character extends MovableObject {
     }
   }
 
-  /**
-   * This function starts the interval that checks if the character is hurt. This happens if health of the character decreases.
-   */
   animationIsHurt() {
-    let animationState = {
-      currentIndexHurt: 0,
-      previousHealth: this.health,
-    };
     let id = setInterval(() => {
-      if (this.healthCharacterDecreases(animationState.previousHealth)) {
+      if (this.healthCharacterDecreases()) {
         this.isHurt = true;
-        this.startHurtAnimation(animationState);
+        this.startHurtAnimation();
       }
     }, 100);
     this.intervalIdsMovableObjects.push(id);
   }
 
-  /**
-   * This function checks if health of the character decreases.
-   *
-   * @param {number} previousHealth - Previous health is stored to compare with actual health of the character.
-   * @returns boolean
-   */
-  healthCharacterDecreases(previousHealth) {
-    return this.health < previousHealth && this.health > 20;
+  healthCharacterDecreases() {
+    return this.health < this.previousHealth && this.health > 20;
   }
 
-  /**
-   * This is the actual hurt animation.
-   *
-   * @param {object} animationState - Object that conatains currentIndexHurt and previousHealt. Both variables are passed to stopHurtAnimation() and changed there.
-   */
-  startHurtAnimation(animationState) {
-    if (animationState.currentIndexHurt < this.imagesHurt.length) {
-      const imagePath = this.imagesHurt[animationState.currentIndexHurt];
-      this.img = this.imageCache[imagePath];
-      animationState.currentIndexHurt++;
+  startHurtAnimation() {
+    if (this.currentImageIndices.hurt < this.imagesHurt.length) {
+      this.playSingleRunAnimation(this.imagesHurt, "hurt")
     } else {
-      this.stopHurtAnimation(animationState);
+      this.stopHurtAnimation();
     }
   }
 
-  /**
-   * This function stops the hurt animation and resets the idle animation.
-   *
-   * @param {object} animationState - Object that conatains currentIndexHurt and previousHealt. Both variables are changed in this function and must be returned to animationIsHurt().
-   */
-  stopHurtAnimation(animationState) {
+  stopHurtAnimation() {
     this.isHurt = false;
     this.resetIdleAnimation();
-    animationState.currentIndexHurt = 0;
-    animationState.previousHealth = this.health;
+    this.currentImageIndices.hurt = 0;
+    this.previousHealth = this.health;
   }
 
   /**
@@ -502,24 +437,10 @@ class Character extends MovableObject {
    *This function contains the dying animation of the character. After showing the whole array of the images it displays the last image of the character forever.
    */
   animationDie() {
-    let currentIndexDie = 0;
     setInterval(() => {
       if (this.health <= 0) {
-        if (currentIndexDie < this.imagesDie.length) {
-          const imagePath = this.imagesDie[currentIndexDie];
-          this.img = this.imageCache[imagePath];
-          currentIndexDie++;
-        } else {
-          this.setLastImageCharacter();
-        }
+        this.playSingleRunAnimation(this.imagesDie, "die");
       }
     }, 100);
-  }
-
-  /**
-   * This function sets the last image of the character.
-   */
-  setLastImageCharacter() {
-    this.img = this.imageCache["img/2_character_pepe/5_dead/D-56.png"];
   }
 }

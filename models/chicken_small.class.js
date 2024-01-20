@@ -28,7 +28,7 @@ class ChickenSmall extends MovableObject {
   }
 
   /**
-   * This function checks if the character is within 400 pixels of the character. It then executes the walking animation and the movement. Because the small chicken runs faster than the character there is no need to retrigger the function.
+   * This function checks if the character is within 200 pixels of the character. It then executes the walking animation and the movement. Because the small chicken runs faster than the character there is no need to retrigger the function.
    */
   startMovingTowardsCharacter() {
     let audioPlayed = false;
@@ -38,7 +38,7 @@ class ChickenSmall extends MovableObject {
         let distance = this.x - world.character.x;
         if (distance < 200) {
           this.moveLeft();
-          this.walkingAnimation();
+          this.playContinuousAnimation(this.imagesWalking, "chickenSmallWalking");
           if (!audioPlayed) {
             this.AUDIO_BWACK.play();
             audioPlayed = true;
