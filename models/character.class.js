@@ -482,8 +482,6 @@ class Character extends MovableObject {
     let bottleThrown = false;
 
     let id = setInterval(() => {
-      //console.log(bottleTakenOut);
-      console.log(this.previousBottlesCount);
       this.bottlesCollected = world.level.throwableBottles.length;
 
       if (this.keyboard.SPACE && this.bottlesCollected > 0 && !bottleThrown) {

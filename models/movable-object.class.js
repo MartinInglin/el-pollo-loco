@@ -11,6 +11,7 @@ class MovableObject extends DrawableObject{
     hurt: 0,
     die: 0,
     bottleRotation: 0,
+    bottleSplash: 0,
   };
   speedY = 0;
   speedX = 0;

@@ -31,9 +31,7 @@ class BottleTrowable extends MovableObject {
     this.loadImages(this.imagesRotation);
     this.loadImages(this.imagesSplash);
 
-    checkWorldExistence().then(() => {
-
-    });
+    checkWorldExistence().then(() => {});
   }
 
   throwBottle() {
@@ -74,10 +72,21 @@ class BottleTrowable extends MovableObject {
   // }
 
   checkBottleHitsGround() {
-      if (!this.isAboveGround()) {
-        this.stopIntervalsMovableObjects()
+    if (!this.isAboveGround()) {
+      this.stopIntervalsMovableObjects();
+      this.playSplashAnimation();
+      setTimeout(() => {
+        this.stopIntervalsMovableObjects();
         this.destroyBottleThrowable();
-      }
+      }, 1000);
+    }
+  }
+
+  playSplashAnimation() {
+    let id = setInterval(() => {
+      this.playSingleRunAnimation(this.imagesSplash, "bottleSplash");
+    }, 100);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   destroyBottleThrowable() {
@@ -85,5 +94,5 @@ class BottleTrowable extends MovableObject {
     if (index !== -1) {
       world.level.throwableBottles.splice(index, 1);
     }
-  }  
+  }
 }
