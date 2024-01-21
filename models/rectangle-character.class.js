@@ -15,6 +15,9 @@ class RectangleCharacter {
     });
     }
   
+    /**
+     * This function gets the position of the character. It is needed to place the corresponding rectangle right above the character.
+     */
     getPositionCharacter() {
       let id = setInterval(() => {
         this.x = this.character.x + 30;

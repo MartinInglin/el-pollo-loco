@@ -1,5 +1,10 @@
 class DrawableObject {
   imageCache = {};
+  x;
+  y;
+  img;
+  height;
+  width;
 
   /**
    * This function is there for loading the first image of an object. It fills the variable img.

@@ -15,6 +15,9 @@ class RectangleEnemy {
     });
   }
 
+  /**
+     * This function gets the position of the enemy. It is needed to place the corresponding rectangle right above the enemy.
+   */
   getPositionEnemy() {
     let id = setInterval(() => {
       this.x = this.enemy.x;

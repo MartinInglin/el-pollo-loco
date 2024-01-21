@@ -1,9 +1,4 @@
 class MovableObject extends DrawableObject{
-  x = 100;
-  y = 300;
-  img;
-  height = 150;
-  width = 100;
   speed;
   otherDirection = false;
   currentImageIndices = {
@@ -15,6 +10,7 @@ class MovableObject extends DrawableObject{
     jump: 0,
     hurt: 0,
     die: 0,
+    bottleRotation: 0,
   };
   speedY = 0;
   speedX = 0;
@@ -46,6 +42,12 @@ class MovableObject extends DrawableObject{
     }
   }
 
+  /**
+   * This function executes all kind of animations that run continuously, for example walking animations.
+   * 
+   * @param {array} imagesAnimation -  Array that contains the paths of the images that are needed to find them in the image cache.
+   * @param {string} animationType - This string is needed to finde the corresponding number in the currentImagesIndices object.
+   */
   playContinuousAnimation(imagesAnimation, animationType) {
     let currentImageIndex = this.currentImageIndices[animationType];
     currentImageIndex = (currentImageIndex + 1) % imagesAnimation.length;
@@ -54,6 +56,12 @@ class MovableObject extends DrawableObject{
     this.img = this.imageCache[imagePath];
   }
 
+  /**
+   * This function executes all kind of animations that run just a single time, for example the jump animation of the character.
+   * 
+   * @param {array} imagesAnimation -  Array that contains the paths of the images that are needed to find them in the image cache.
+   * @param {string} animationType - This string is needed to finde the corresponding number in the currentImagesIndices object.
+   */
   playSingleRunAnimation(imagesAnimation, animationType) {
     let currentImageIndex = this.currentImageIndices[animationType];
   
@@ -83,7 +91,7 @@ class MovableObject extends DrawableObject{
    * @returns boolean
    */
   isAboveGround() {
-    return this.y < 250;
+    return this.y + this.height - this.adjustmentSprite < 440;
   }
 
   /**

@@ -3,6 +3,7 @@ class Level {
   clouds;
   coins;
   bottles;
+  throwableBottles;
   backgroundObjects;
   backgroundReproductionCountX;
   backgroundImagePaths;
@@ -13,6 +14,7 @@ class Level {
     this.clouds = actualLevel.clouds;
     this.coins = actualLevel.coins;
     this.bottles = actualLevel.bottles;
+    this.throwableBottles = actualLevel.throwableBottles;
     this.backgroundObjects = actualLevel.backgroundObjects;
     this.backgroundReproductionCountX = actualLevel.backgroundReproductionCountX;
     this.backgroundImagePaths = actualLevel.backgroundImagePaths;

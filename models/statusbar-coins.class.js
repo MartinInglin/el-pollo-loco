@@ -20,6 +20,9 @@ class StatusbarCoins extends Statusbars {
     });
   }
 
+  /**
+   * This function sets the image of the statusbar for the coins. It checks how many coins the player has collected and displays the corresponding image. 
+   */
   changeStatusbar() {
     let id = setInterval(() => {
       this.img = this.imageCache[this.images[world.character.coinsCollected]];

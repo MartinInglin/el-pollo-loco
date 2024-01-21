@@ -23,20 +23,23 @@ class World {
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects);
+
+    this.addToMap(this.character);
+    
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.coins);
-    this.addObjectsToMap(this.level.bottles)
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.throwableBottles);
 
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectangleCharacter);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesEnemies);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesCoins);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottles);
 
-    this.addToMap(this.character);
-
     this.ctx.translate(-this.camera_x, 0);
 
+    // Space for fixed objects //
     this.addStatusbarsToMap(this.statusbars);
 
     let self = this;
@@ -93,12 +96,22 @@ class World {
     this.ctx.restore();
   }
 
+  /**
+   * This function initializes the drawing of the statusbars. It receives an array of of all the statusbars und passes each object of the array to the function "addStatusbarToMap()".
+   *
+   * @param {array} statusbars - This array contains all the objects of the statusbars.
+   */
   addStatusbarsToMap(statusbars) {
     statusbars.forEach((statusbar) => {
       this.addStatusbarToMap(statusbar);
     });
   }
 
+  /**
+   * This function adds a statusbar to the canvas.
+   *
+   * @param {object} statusbar - This object contains all relevant parameters like x and y for drawing the statusbar.
+   */
   addStatusbarToMap(statusbar) {
     this.ctx.drawImage(statusbar.img, statusbar.x, statusbar.y, statusbar.width, statusbar.height);
   }
@@ -123,7 +136,7 @@ class World {
     this.ctx.beginPath();
     this.ctx.rect(rectangleCollision.x, rectangleCollision.y, rectangleCollision.width, rectangleCollision.height);
     this.ctx.lineWidth = 0;
-    this.ctx.strokeStyle = "transparent";
+    this.ctx.strokeStyle = "blue";
     this.ctx.stroke();
     this.ctx.closePath();
   }

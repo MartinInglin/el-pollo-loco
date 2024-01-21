@@ -20,27 +20,17 @@ class StatusbarHealthCharacter extends Statusbars {
     });
   }
 
+  /**
+   * This function sets the image of the statusbar for the characters health. It compares the health of the character with the array healthValues and shows the image corresponding to this index.
+   */
   changeStatusbar() {
-    let currentIndexStatusbar = 0;
-    let previousHealth = world.character.health;
-  
+    const healthValues = [100, 80, 60, 40, 20, 0];
     let id = setInterval(() => {
-      if (this.healthCharacterDecreases(previousHealth) && currentIndexStatusbar < this.images.length - 1) {
-        currentIndexStatusbar++;
-        previousHealth = world.character.health;
-        this.img = this.imageCache[this.images[currentIndexStatusbar]];
+      const index = healthValues.indexOf(world.character.health);
+      if (index !== -1) {
+        this.img = this.imageCache[this.images[index]];
       }
     }, 100);
     this.intervalsStatusbar.push(id);
-  }
-  
-  /**
-   * This function checks if health of the character decreases.
-   *
-   * @param {number} previousHealth - Previous health is stored to compare with actual health of the character.
-   * @returns boolean
-   */
-  healthCharacterDecreases(previousHealth) {
-    return world.character.health < previousHealth;
   }
 }

@@ -10,6 +10,9 @@ class Coin extends MovableObject {
     this.coinCollected();
   }
 
+  /**
+   * This function checks if the character has hit th coin. If so it deletes the coin.
+   */
   coinCollected() {
     let id = setInterval(() => {
       if (this.health === 0) {
@@ -20,10 +23,16 @@ class Coin extends MovableObject {
     this.intervalIdsMovableObjects.push(id);
   }
 
+  /**
+   * This function creates an animation. After the character has hit the coin, it flies up and out of the canvas.
+   */
   coinDisappersAnimation() {
     this.y -= 30;
   }
 
+  /**
+   * This function deletes the object coin from the array "world.level.coins". It waits for 1s because this time is needed to fulfill the coinDisappersAnimation().
+   */
   deleteCoin() {
     setTimeout(() => {
       const index = world.level.coins.indexOf(this);

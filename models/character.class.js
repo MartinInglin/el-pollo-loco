@@ -1,4 +1,5 @@
 class Character extends MovableObject {
+  x = 100;
   y = 250;
   height = 200;
   width = 140;
@@ -107,6 +108,8 @@ class Character extends MovableObject {
   coinsCollected = 0;
   bottlesCollected = 0;
   previousHealth = 100;
+  adjustmentSprite = 0;
+  previousBottlesCount = 0;
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
@@ -130,6 +133,8 @@ class Character extends MovableObject {
       this.animationIsHurt();
       this.animationDie();
       this.endLevelReached();
+      this.checkThrowBottle();
+      this.previousBottlesCount =  world.level.throwableBottles.length;
     });
   }
 
@@ -224,21 +229,19 @@ class Character extends MovableObject {
     this.AUDIO_WALKING.currentTime = 0;
   }
 
+  /**
+   * This function sets the state of the character. If the player presses a key, the idle animation is reset. If he doesn't press any key the idle animation starts. After 3 cycles of the idle animation the character starts sleeping.
+   */
   idleAnimation() {
     let id = setInterval(() => {
       if (this.playerPressAnyKey()) {
-        this.iterationCountIdleAnimation = 0;
-        this.characterSleep = false;
-      }
-
-      if (this.playerDontPressAnyKeyNoSleeping()) {
+        this.resetIdleAnimation();
+      } else if (this.playerDontPressAnyKeyNoSleeping()) {
         this.characterStartBlinking();
         if (this.after3CyclesBlinking()) {
           this.characterSleep = true;
         }
-      }
-
-      if (this.characterSleep) {
+      } else if (this.characterSleep) {
         this.characterStartSleeping();
       }
     }, 500);
@@ -263,6 +266,9 @@ class Character extends MovableObject {
     return !this.keyboard.LEFT && !this.keyboard.RIGHT && !this.jumpAnimationStarted && !this.characterSleep;
   }
 
+  /**
+   * This function starts the blinking animation of the character if the player doesn't press any key.
+   */
   characterStartBlinking() {
     this.playContinuousAnimation(this.imagesIdle, "idle");
     this.iterationCountIdleAnimation++;
@@ -277,6 +283,9 @@ class Character extends MovableObject {
     return this.iterationCountIdleAnimation >= this.imagesIdle.length * 3;
   }
 
+  /**
+   * This function starts the sleeping animation of the character if the character has cycled three times the idle animation.
+   */
   characterStartSleeping() {
     this.playContinuousAnimation(this.imagesIdleLong, "idleLong");
   }
@@ -320,11 +329,17 @@ class Character extends MovableObject {
     this.intervalIdsMovableObjects.push(id);
   }
 
+  /**
+   * This function calls the jump animation of the character. It also flips the image if the player changes direction within the jump.
+   */
   characterJumpAnimation() {
-    this.playSingleRunAnimation(this.imagesJumping, "jump")
+    this.playSingleRunAnimation(this.imagesJumping, "jump");
     this.flipImageInJump();
   }
 
+  /**
+   * This function resets the jump animation so it is ready for the next jump.
+   */
   resetJumpAnimation() {
     this.jumpAnimationStarted = false;
     this.currentImageIndices.jump = 0;
@@ -339,6 +354,11 @@ class Character extends MovableObject {
     return this.keyboard.UP || this.jumpAnimationStarted;
   }
 
+  /**
+   * This function checks if the jumping animation is still running.
+   *
+   * @returns - boolean
+   */
   jumpAnimationNotFinished() {
     return this.currentImageIndices.jump < this.imagesJumping.length;
   }
@@ -396,6 +416,9 @@ class Character extends MovableObject {
     }
   }
 
+  /**
+   * This function calls the hurt animation if the character hits an enemy.
+   */
   animationIsHurt() {
     let id = setInterval(() => {
       if (this.healthCharacterDecreases()) {
@@ -406,19 +429,30 @@ class Character extends MovableObject {
     this.intervalIdsMovableObjects.push(id);
   }
 
+  /**
+   * This function returns true if the characters health has decreased.
+   *
+   * @returns - boolean
+   */
   healthCharacterDecreases() {
     return this.health < this.previousHealth && this.health > 20;
   }
 
+  /**
+   * This function plays the hurt animation. It ensures that it is only played once.
+   */
   startHurtAnimation() {
     if (this.currentImageIndices.hurt < this.imagesHurt.length) {
-      this.playSingleRunAnimation(this.imagesHurt, "hurt")
+      this.playSingleRunAnimation(this.imagesHurt, "hurt");
     } else {
-      this.stopHurtAnimation();
+      this.resetHurtAnimation();
     }
   }
 
-  stopHurtAnimation() {
+  /**
+   * This function resets the hurt animation.
+   */
+  resetHurtAnimation() {
     this.isHurt = false;
     this.resetIdleAnimation();
     this.currentImageIndices.hurt = 0;
@@ -442,5 +476,27 @@ class Character extends MovableObject {
         this.playSingleRunAnimation(this.imagesDie, "die");
       }
     }, 100);
+  }
+
+  checkThrowBottle() {
+    let bottleThrown = false;
+
+    let id = setInterval(() => {
+      //console.log(bottleTakenOut);
+      console.log(this.previousBottlesCount);
+      this.bottlesCollected = world.level.throwableBottles.length;
+
+      if (this.keyboard.SPACE && this.bottlesCollected > 0 && !bottleThrown) {
+        bottleThrown = true;
+        world.level.throwableBottles[0].throwBottle();
+        this.previousBottlesCount -= 1;
+      }
+      if (this.bottlesCollected === this.previousBottlesCount) {
+        bottleThrown = false;
+        this.previousBottlesCount = this.bottlesCollected;
+      }
+    }, 40);
+
+    this.intervalIdsMovableObjects.push(id);
   }
 }
