@@ -36,6 +36,7 @@ class World {
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesEnemies);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesCoins);
     this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottles);
+    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottlesThrowable);
 
     this.ctx.translate(-this.camera_x, 0);
 

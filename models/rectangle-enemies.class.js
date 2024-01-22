@@ -25,4 +25,8 @@ class RectangleEnemy {
     }, 40);
     this.intervalIdsRectangleEnemy.push(id);
   }
+
+  stopIntervals() {
+    this.intervalIdsRectangleEnemy.forEach(clearInterval);
+  }
 }

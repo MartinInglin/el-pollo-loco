@@ -123,7 +123,7 @@ class Character extends MovableObject {
     this.loadImages(this.imagesDie);
 
     checkWorldExistence().then(() => {
-      this.applyGravity();
+      this.applyGravityCharacter();
       this.moveCamera();
       this.moveCharacter();
       this.characterWalkAnimation();
@@ -136,6 +136,13 @@ class Character extends MovableObject {
       this.checkThrowBottle();
       this.previousBottlesCount =  world.level.throwableBottles.length;
     });
+  }
+
+  applyGravityCharacter() {
+    let id = setInterval(() => {
+      this.applyGravity();
+    }, 40);
+    this.intervalIdsMovableObjects.push(id);
   }
 
   /**

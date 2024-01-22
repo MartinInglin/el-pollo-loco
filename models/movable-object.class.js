@@ -1,4 +1,4 @@
-class MovableObject extends DrawableObject{
+class MovableObject extends DrawableObject {
   speed;
   otherDirection = false;
   currentImageIndices = {
@@ -45,7 +45,7 @@ class MovableObject extends DrawableObject{
 
   /**
    * This function executes all kind of animations that run continuously, for example walking animations.
-   * 
+   *
    * @param {array} imagesAnimation -  Array that contains the paths of the images that are needed to find them in the image cache.
    * @param {string} animationType - This string is needed to finde the corresponding number in the currentImagesIndices object.
    */
@@ -59,13 +59,13 @@ class MovableObject extends DrawableObject{
 
   /**
    * This function executes all kind of animations that run just a single time, for example the jump animation of the character.
-   * 
+   *
    * @param {array} imagesAnimation -  Array that contains the paths of the images that are needed to find them in the image cache.
    * @param {string} animationType - This string is needed to finde the corresponding number in the currentImagesIndices object.
    */
   playSingleRunAnimation(imagesAnimation, animationType) {
     let currentImageIndex = this.currentImageIndices[animationType];
-  
+
     if (currentImageIndex < imagesAnimation.length) {
       const imagePath = imagesAnimation[currentImageIndex];
       this.img = this.imageCache[imagePath];
@@ -77,13 +77,10 @@ class MovableObject extends DrawableObject{
    * This function simulates the gravity of any object. If the object is above ground it subtracts the acceleration from its speedY until it is back on the ground.
    */
   applyGravity() {
-    let id = setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 25);
-    this.intervalIdsMovableObjects.push(id);
+    if (this.isAboveGround() || this.speedY > 0) {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
+    }
   }
 
   /**

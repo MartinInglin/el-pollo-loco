@@ -4,7 +4,7 @@ class RectangleCharacter {
     y;
     width;
     height;
-    intervalIds = [];
+    intervalIdsRectangleCharacter = [];
   
     constructor() {
       checkWorldExistence().then(() => {
@@ -23,7 +23,11 @@ class RectangleCharacter {
         this.x = this.character.x + 30;
         this.y = this.character.y + 90;
       }, 40);
-      this.intervalIds.push(id);
+      this.intervalIdsRectangleCharacter.push(id);
+    }
+
+    stopIntervals() {
+      this.intervalIdsRectangleCharacter.forEach(clearInterval);
     }
   }
   

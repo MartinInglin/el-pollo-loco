@@ -25,6 +25,7 @@ class BottleTrowable extends MovableObject {
   speedX = this.speed;
   acceleration = 2;
   adjustmentSprite = 30;
+  bottleHitsEnemy = false;
 
   constructor() {
     super().loadImage("img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png");
@@ -35,7 +36,8 @@ class BottleTrowable extends MovableObject {
   }
 
   throwBottle() {
-    this.setPositionCharacter();
+    this.createRectangleBottleThrowable();
+    this.getPositionCharacter();
     this.speedY = 25;
     let id = setInterval(() => {
       if (!world.character.otherDirection) {
@@ -43,21 +45,18 @@ class BottleTrowable extends MovableObject {
       } else {
         this.moveLeft();
       }
-      this.gravityBottle();
+      this.applyGravity();
       this.throwBottleAnimation();
-      this.checkBottleHitsGround();
+      this.checkBottleDestroyed();
     }, 40);
     this.intervalIdsMovableObjects.push(id);
   }
 
-  gravityBottle() {
-    if (this.isAboveGround() || this.speedY > 0) {
-      this.y -= this.speedY;
-      this.speedY -= this.acceleration;
-    }
+  createRectangleBottleThrowable() {
+    world.rectanglesCollision.rectanglesBottlesThrowable.push(new RectangleBottleThrowable());
   }
 
-  setPositionCharacter() {
+  getPositionCharacter() {
     this.x = world.character.x + 20;
     this.y = world.character.y + 100;
   }
@@ -66,19 +65,14 @@ class BottleTrowable extends MovableObject {
     this.playContinuousAnimation(this.imagesRotation, "bottleRotation");
   }
 
-  // createRectangleBottleThrowable() {
-  //   const rectangleBottleThrowable = new RectangleBottleThrowable();
-  //   world.rectanglesCollision.rectanglesBottlesThrowable.push(rectangleBottleThrowable);
-  // }
-
-  checkBottleHitsGround() {
-    if (!this.isAboveGround()) {
+  checkBottleDestroyed() {
+    if (!this.isAboveGround() || this.bottleHitsEnemy) {
       this.stopIntervalsMovableObjects();
       this.playSplashAnimation();
       setTimeout(() => {
         this.stopIntervalsMovableObjects();
         this.destroyBottleThrowable();
-      }, 1000);
+      }, 300);
     }
   }
 

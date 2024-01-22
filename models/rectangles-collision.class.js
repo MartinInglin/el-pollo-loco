@@ -22,6 +22,8 @@ class RectanglesCollision {
       this.isCollidingEnemy();
       this.isCollidingCoin();
       this.isCollidingBottle();
+      this.enemyIsCollidingBottle();
+      this.bottleIsCollidingGround();
     }, 40);
     this.intervalIdsRectanglesCollision.push(id);
   }
@@ -31,11 +33,15 @@ class RectanglesCollision {
    */
   isCollidingEnemy() {
     this.rectanglesEnemies.forEach((enemy) => {
-      if (world.character.isAboveGround() && this.isCollidingObject(enemy) && world.character.speedY < 0) {
+      if (
+        world.character.isAboveGround() &&
+        this.isCollidingObject("rectangleCharacter", enemy) &&
+        world.character.speedY < 0
+      ) {
         enemy.enemy.health = 0;
-        this.destroyRectangleEnemy(enemy);
+        this.destroyRectangle(enemy, "rectanglesEnemies");
         world.character.miniJump();
-      } else if (this.isCollidingObject(enemy)) {
+      } else if (this.isCollidingObject("rectangleCharacter", enemy)) {
         this.characterIsHurt();
         this.characterIsDead();
       }
@@ -67,80 +73,73 @@ class RectanglesCollision {
   }
 
   /**
-   * This function destroys the rectangle around the enemy by finding its position in the array "world.rectanglesCollision.rectanglesEnemies". It is needed because otherwise the player would still loose health if he hits the invisible rectangle of the enemy.
-   * 
-   * @param {object} enemy - Object that contains all information about the enemy.
-   */
-  destroyRectangleEnemy(enemy) {
-    const index = world.rectanglesCollision.rectanglesEnemies.indexOf(enemy);
-    if (index !== -1) {
-      world.rectanglesCollision.rectanglesEnemies.splice(index, 1);
-    }
-  }
-
-  /**
    * This function checks if the character is colliding with a coin. If so it counts plus 1 on "world.character.coinsCollected" and destroys the rectangle of the coin. The player can only collect 5 coins.
    */
   isCollidingCoin() {
     this.rectanglesCoins.forEach((coin) => {
-      if (this.isCollidingObject(coin)) {
+      if (this.isCollidingObject("rectangleCharacter", coin)) {
         coin.coin.health = 0;
         if (world.character.coinsCollected < 5) {
           world.character.coinsCollected += 1;
         }
-        this.destroyRectangleCoin(coin);
+        this.destroyRectangle(coin, "rectanglesCoins");
       }
     });
-  }
-
-  /**
-   * This function destroys the rectangle around the coin by finding its position in the array "world.rectanglesCollision.rectanglesCoins". It is needed because otherwise the player could still collect coins if he hits the invisible rectangle of the coin.
-   * 
-   * @param {object} coin - Object that contains all information about the coin.
-   */
-  destroyRectangleCoin(coin) {
-    const index = world.rectanglesCollision.rectanglesCoins.indexOf(coin);
-    if (index !== -1) {
-      world.rectanglesCollision.rectanglesCoins.splice(index, 1);
-    }
   }
 
   isCollidingBottle() {
     this.rectanglesBottles.forEach((bottle) => {
-      if (this.isCollidingObject(bottle) && world.level.throwableBottles.length < 5) {
+      if (this.isCollidingObject("rectangleCharacter", bottle) && world.level.throwableBottles.length < 5) {
         bottle.bottle.health = 0;
         world.level.throwableBottles.push(new BottleTrowable());
         world.character.bottlesCollected = world.level.throwableBottles.length;
         world.character.previousBottlesCount = world.level.throwableBottles.length;
-        this.destroyRectangleBottle(bottle);
+        this.destroyRectangle(bottle, "rectanglesBottles");
       }
     });
   }
 
-  /**
-   * This function destroys the rectangle around the bottle by finding its position in the array "world.rectanglesCollision.rectanglesBottles". It is needed because otherwise the player could still collect bottles if he hits the invisible rectangle of the bottle.
-   * 
-   * @param {object} bottle - Object that contains all information about the bottle.
-   */
-  destroyRectangleBottle(bottle) {
-    const index = world.rectanglesCollision.rectanglesBottles.indexOf(bottle);
-    if (index !== -1) {
-      world.rectanglesCollision.rectanglesBottles.splice(index, 1);
+  enemyIsCollidingBottle() {
+    if (this.rectanglesBottlesThrowable.length > 0) {
+      this.rectanglesEnemies.forEach((enemy) => {
+        if (this.rectanglesBottlesThrowable[0] && this.isCollidingObject("rectanglesBottlesThrowable", enemy)) {
+          world.level.throwableBottles[0].bottleHitsEnemy = true;
+          enemy.enemy.health = 0;
+          this.destroyRectangle(enemy, "rectanglesEnemies");
+          this.destroyRectangle(this.rectanglesBottlesThrowable[0], "rectanglesBottlesThrowable");
+        }
+      });
     }
   }
 
-  /**
-   * This function checks if any kind of object is colliding with the rectangle of the character.
-   * 
-   * @param {object} object - Contains all the relevant information about the object.
-   * @returns - boolean
-   */
-  isCollidingObject(object) {
+  bottleIsCollidingGround() {
+    if (this.rectanglesBottlesThrowable.length > 0) {
+      this.rectanglesBottlesThrowable.forEach((bottle) => {
+        if (!this.isAboveGround(bottle)) {
+          this.destroyRectangle(bottle, "rectanglesBottlesThrowable")
+      }
+      });
+    }
+  }
+
+  isAboveGround(object) {
+    return object.y + object.height - 30 < 440;
+  }
+
+  destroyRectangle(object, path) {
+    const index = this[path].indexOf(object);
+    if (index !== -1) {
+      object.stopIntervals();
+      this[path].splice(index, 1);
+    }
+  }
+
+  isCollidingObject(object1, object2) {
     return (
-      this.rectangleCharacter[0].x < object.x + object.width &&
-      this.rectangleCharacter[0].x + this.rectangleCharacter[0].width > object.x &&
-      this.rectangleCharacter[0].y < object.y + object.height &&
-      this.rectangleCharacter[0].y + this.rectangleCharacter[0].height > object.y
+      this[object1][0].x < object2.x + object2.width &&
+      this[object1][0].x + this.rectangleCharacter[0].width > object2.x &&
+      this[object1][0].y < object2.y + object2.height &&
+      this[object1][0].y + this.rectangleCharacter[0].height > object2.y
     );
   }
 

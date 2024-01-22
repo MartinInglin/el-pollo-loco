@@ -4,6 +4,7 @@ class RectangleCoin {
   y;
   width;
   height;
+  intervalIdsRectangleCoin = [];
 
   constructor(coin) {
     this.coin = coin;
@@ -11,5 +12,9 @@ class RectangleCoin {
     this.y = this.coin.y + 25;
     this.height = this.coin.height - 50;
     this.width = this.coin.width - 50;
+  }
+
+  stopIntervals() {
+    this.intervalIdsRectangleCoin.forEach(clearInterval);
   }
 }
