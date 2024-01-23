@@ -5,7 +5,7 @@ class World {
   ctx;
   camera_x = 0;
   level = new Level(level1);
-  rectanglesCollision = new RectanglesCollision();
+  collision = new Collision();
   statusbars = [new StatusbarHealthCharacter(), new StatusbarCoins(), new StatusbarBottles()];
 
   constructor(canvas) {
@@ -32,11 +32,11 @@ class World {
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.throwableBottles);
 
-    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectangleCharacter);
-    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesEnemies);
-    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesCoins);
-    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottles);
-    this.addRectanglesCollisionToMap(this.rectanglesCollision.rectanglesBottlesThrowable);
+    this.addRectanglesCollisionToMap(this.collision.rectangleCharacter);
+    this.addRectanglesCollisionToMap(this.collision.rectanglesEnemies);
+    this.addRectanglesCollisionToMap(this.collision.rectanglesCoins);
+    this.addRectanglesCollisionToMap(this.collision.rectanglesBottles);
+    this.addRectanglesCollisionToMap(this.collision.rectanglesBottlesThrowable);
 
     this.ctx.translate(-this.camera_x, 0);
 
@@ -145,7 +145,7 @@ class World {
    * This function stops all relevant Intervals of the game. Relevant means the player would notice if it keeps running. The function calls functions in the corresponding objects.
    */
   stopAllIntervals() {
-    this.rectanglesCollision.stopIntervalsCollsion();
+    this.collision.stopIntervalsCollsion();
 
     const stopIntervalsMovableObjects = (movableObjects) => {
       movableObjects.forEach((object) => {

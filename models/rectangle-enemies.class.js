@@ -1,12 +1,8 @@
-class RectangleEnemy {
+class RectangleEnemy extends MovableObject{
   enemy;
-  x;
-  y;
-  width;
-  height;
-  intervalIdsRectangleEnemy = [];
 
   constructor(enemy) {
+    super();
     this.enemy = enemy;
     this.height = this.enemy.height;
     this.width = this.enemy.width;
@@ -23,10 +19,6 @@ class RectangleEnemy {
       this.x = this.enemy.x;
       this.y = this.enemy.y;
     }, 40);
-    this.intervalIdsRectangleEnemy.push(id);
-  }
-
-  stopIntervals() {
-    this.intervalIdsRectangleEnemy.forEach(clearInterval);
+    this.intervalIdsMovableObjects.push(id);
   }
 }

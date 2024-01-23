@@ -1,11 +1,11 @@
-class RectangleBottleThrowable {
+class RectangleBottleThrowable extends MovableObject{
   x;
   y = 0;
   height = 80;
   width = 80;
-  intervalIdsRectangleThrowableBottle = [];
 
   constructor() {
+    super();
     checkWorldExistence().then(() => {
       this.getPositionBottle();
     });
@@ -16,10 +16,6 @@ class RectangleBottleThrowable {
         this.x = world.level.throwableBottles[0].x;
         this.y = world.level.throwableBottles[0].y;
     }, 40);
-    this.intervalIdsRectangleThrowableBottle.push(id);
-  }
-
-  stopIntervals() {
-    this.intervalIdsRectangleThrowableBottle.forEach(clearInterval);
+    this.intervalIdsMovableObjects.push(id);
   }
 }

@@ -36,11 +36,12 @@ class BottleThrowable extends MovableObject {
   }
 
   throwBottle() {
+    const bottleThrownRight = !world.character.otherDirection;
     this.createRectangleBottleThrowable();
     this.getPositionCharacter();
     this.speedY = 25;
     let id = setInterval(() => {
-      if (!world.character.otherDirection) {
+      if (bottleThrownRight) {
         this.moveRight();
       } else {
         this.moveLeft();
@@ -53,7 +54,7 @@ class BottleThrowable extends MovableObject {
   }
 
   createRectangleBottleThrowable() {
-    world.rectanglesCollision.rectanglesBottlesThrowable.push(new RectangleBottleThrowable());
+    world.collision.rectanglesBottlesThrowable.push(new RectangleBottleThrowable());
   }
 
   getPositionCharacter() {

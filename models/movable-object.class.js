@@ -97,7 +97,7 @@ class MovableObject extends DrawableObject {
    */
   enemyDies() {
     let id = setInterval(() => {
-      if (this.health === 0) {
+      if (this.health === 0 || this.x < -100) {
         this.stopIntervalsMovableObjects();
         this.enemyDiesAnimation();
         this.deleteEnemy();

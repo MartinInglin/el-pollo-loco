@@ -1,4 +1,4 @@
-class RectanglesCollision {
+class Collision {
   rectangleCharacter = [new RectangleCharacter()];
   rectanglesEnemies = level1.enemies.map((enemy) => new RectangleEnemy(enemy));
   rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
@@ -24,6 +24,7 @@ class RectanglesCollision {
       this.isCollidingBottle();
       this.enemyIsCollidingBottle();
       this.bottleIsCollidingGround();
+      this.enemyLeavesCanvas()
     }, 40);
     this.intervalIdsRectanglesCollision.push(id);
   }
@@ -50,7 +51,6 @@ class RectanglesCollision {
     });
   }
   
-
   /**
    * This function subtracts -20 from the characters health and sets a timeout so the player can move away from the enemy.
    */
@@ -151,6 +151,17 @@ class RectanglesCollision {
   }
 
   /**
+   * This function checks if an enemy has left the canvas on the left side. If so it calls for stopping the intervals and deleting the object.
+   */
+  enemyLeavesCanvas() {
+    this.rectanglesEnemies.forEach((enemy) => {
+      if (enemy.x < -100) {
+        this.destroyRectangle(enemy, "rectanglesEnemies");
+      }
+    });
+  }
+
+  /**
    * This function stops all the intervals of an object and then destroys its rectangle.
    * 
    * @param {object} object - The object is any rectangle.
@@ -159,7 +170,7 @@ class RectanglesCollision {
   destroyRectangle(object, path) {
     const index = this[path].indexOf(object);
     if (index !== -1) {
-      object.stopIntervals();
+      object.stopIntervalsMovableObjects();
       this[path].splice(index, 1);
     }
   }

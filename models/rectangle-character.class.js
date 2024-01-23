@@ -1,12 +1,8 @@
-class RectangleCharacter {
+class RectangleCharacter extends MovableObject{
     character;
-    x;
-    y;
-    width;
-    height;
-    intervalIdsRectangleCharacter = [];
   
     constructor() {
+      super();
       checkWorldExistence().then(() => {
         this.character = world.character;
         this.getPositionCharacter();
@@ -23,11 +19,7 @@ class RectangleCharacter {
         this.x = this.character.x + 30;
         this.y = this.character.y + 90;
       }, 40);
-      this.intervalIdsRectangleCharacter.push(id);
-    }
-
-    stopIntervals() {
-      this.intervalIdsRectangleCharacter.forEach(clearInterval);
+      this.intervalIdsMovableObjects.push(id);
     }
   }
   

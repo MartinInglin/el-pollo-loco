@@ -1,20 +1,12 @@
-class RectangleBottle {
+class RectangleBottle extends MovableObject{
     bottle;
-    x;
-    y;
-    width;
-    height;
-    invervalIdsRectangleBottle = [];
   
     constructor(bottle) {
+      super();
       this.bottle = bottle;
       this.x = this.bottle.x;
       this.y = this.bottle.y;
       this.height = this.bottle.height;
       this.width = this.bottle.width;
-    }
-
-    stopIntervals() {
-      this.invervalIdsRectangleBottle.forEach(clearInterval);
     }
   }
