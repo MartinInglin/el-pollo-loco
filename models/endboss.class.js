@@ -14,10 +14,10 @@ class Endboss extends MovableObject {
   ];
   AUDIO_WALKING = new Audio('audio/quick-run-cartoony.mp3')
 
-  constructor() {
+  constructor(xPosition) {
     super().loadImage(this.imagesWalking[0]);
     this.loadImages(this.imagesWalking);
-    this.x = 1800;
+    this.x = xPosition;
 
   }
 }

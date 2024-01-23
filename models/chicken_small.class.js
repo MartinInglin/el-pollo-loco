@@ -10,9 +10,7 @@ class ChickenSmall extends MovableObject {
     "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
     "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
   ];
-  imageDead = [
-    "img/3_enemies_chicken/chicken_small/2_dead/dead.png",
-  ]
+  imageDead = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
   AUDIO_BWACK = new Audio("audio/bwack.mp3");
 
   constructor(xPosition) {
@@ -22,8 +20,8 @@ class ChickenSmall extends MovableObject {
     this.x = xPosition;
 
     checkWorldExistence().then(() => {
-    this.startMovingTowardsCharacter();
-    this.enemyDies()
+      this.startMovingTowardsCharacter();
+      this.enemyDies();
     });
   }
 
@@ -34,15 +32,13 @@ class ChickenSmall extends MovableObject {
     let audioPlayed = false;
 
     let id = setInterval(() => {
-      if (world) {
-        let distance = this.x - world.character.x;
-        if (distance < 200) {
-          this.moveLeft();
-          this.playContinuousAnimation(this.imagesWalking, "chickenSmallWalking");
-          if (!audioPlayed) {
-            this.AUDIO_BWACK.play();
-            audioPlayed = true;
-          }
+      let distance = this.x - world.character.x;
+      if (distance < 200) {
+        this.moveLeft();
+        this.playContinuousAnimation(this.imagesWalking, "chickenSmallWalking");
+        if (!audioPlayed) {
+          this.AUDIO_BWACK.play();
+          audioPlayed = true;
         }
       }
     }, 30);

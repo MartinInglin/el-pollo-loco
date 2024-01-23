@@ -18,6 +18,7 @@ class MovableObject extends DrawableObject {
   acceleration = 2;
   health = 100;
   intervalIdsMovableObjects = [];
+  isFyling = false;
 
   /**
    * This function moves any object to the left side. For the look there is an acceleration at the beginning of the movement because this feels more natural.

@@ -1,6 +1,6 @@
 class Collision {
   rectangleCharacter = [new RectangleCharacter()];
-  rectanglesEnemies = level1.enemies.map((enemy) => new RectangleEnemy(enemy));
+  rectanglesEnemies = [];
   rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
   rectanglesBottles = level1.bottles.map((bottle) => new RectangleBottle(bottle));
   rectanglesBottlesThrowable = [];
@@ -39,7 +39,8 @@ class Collision {
       if (
         world.character.isAboveGround() &&
         this.isCollidingObject(characterRect, enemy) &&
-        world.character.speedY < 0
+        world.character.speedY < 0 &&
+        !enemy.enemy.isFlying
       ) {
         enemy.enemy.health = 0;
         this.destroyRectangle(enemy, "rectanglesEnemies");

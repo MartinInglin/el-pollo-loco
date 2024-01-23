@@ -8,6 +8,7 @@ class Level {
   backgroundReproductionCountX;
   backgroundImagePaths;
   levelEnd;
+  script;
 
   constructor(actualLevel) {
     this.enemies = actualLevel.enemies;
@@ -20,6 +21,7 @@ class Level {
     this.backgroundImagePaths = actualLevel.backgroundImagePaths;
     this.levelEnd = this.backgroundReproductionCountX * 720;
     this.loadBackgroundImages();
+    this.script = new ScriptLevel1();
   }
 
   /**
