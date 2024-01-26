@@ -24,9 +24,8 @@ class ChickenSmallFlying extends MovableObject {
    * This function checks if the character is within 200 pixels of the character. It then executes the walking animation and the movement. Because the small chicken runs faster than the character there is no need to retrigger the function.
    */
   startMovingTowardsCharacter() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       this.moveLeft()
     }, 30);
-    this.intervalIdsMovableObjects.push(id);
   }
 }

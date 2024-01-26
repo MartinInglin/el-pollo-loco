@@ -17,12 +17,11 @@ class Bottle extends MovableObject {
    * This function checks if the player has collected a bottle. If so, it calls the function to delete the bottle.
    */
   bottleCollected() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.health === 0) {
         this.deleteBottle();
       }
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**

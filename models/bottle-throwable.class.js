@@ -40,7 +40,7 @@ class BottleThrowable extends MovableObject {
     this.createRectangleBottleThrowable();
     this.getPositionCharacter();
     this.speedY = 25;
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (bottleThrownRight) {
         this.moveRight();
       } else {
@@ -50,7 +50,6 @@ class BottleThrowable extends MovableObject {
       this.throwBottleAnimation();
       this.checkBottleDestroyed();
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   createRectangleBottleThrowable() {

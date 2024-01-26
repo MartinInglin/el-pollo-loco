@@ -19,12 +19,11 @@ class Cloud extends MovableObject {
    * This function moves the clouds. If the cloud is outside the canvas on the leftside, x is changed so it reappears on the right side again.
    */
   moveClouds() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.x < -500) {
         this.x = world.level.levelEnd + 720;
       }
       this.x -= 0.5;
     }, 100);
-    this.intervalIdsMovableObjects.push(id);
   }
 }

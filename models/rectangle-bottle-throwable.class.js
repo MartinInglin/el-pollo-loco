@@ -12,10 +12,9 @@ class RectangleBottleThrowable extends MovableObject{
   }
 
   getPositionBottle() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
         this.x = world.level.throwableBottles[0].x;
         this.y = world.level.throwableBottles[0].y;
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
   }
 }

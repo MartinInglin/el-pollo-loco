@@ -25,12 +25,11 @@ class StatusbarHealthCharacter extends Statusbars {
    */
   changeStatusbar() {
     const healthValues = [100, 80, 60, 40, 20, 0];
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       const index = healthValues.indexOf(world.character.health);
       if (index !== -1) {
         this.img = this.imageCache[this.images[index]];
       }
     }, 100);
-    this.intervalsStatusbar.push(id);
   }
 }

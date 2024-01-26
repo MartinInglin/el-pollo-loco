@@ -14,13 +14,12 @@ class Coin extends MovableObject {
    * This function checks if the character has hit th coin. If so it deletes the coin.
    */
   coinCollected() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.health === 0) {
         this.coinDisappersAnimation();
         this.deleteCoin();
       }
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -34,7 +33,7 @@ class Coin extends MovableObject {
    * This function deletes the object coin from the array "world.level.coins". It waits for 1s because this time is needed to fulfill the coinDisappersAnimation().
    */
   deleteCoin() {
-    setTimeout(() => {
+    this.setStoppableInterval(() => {
       const index = world.level.coins.indexOf(this);
       if (index !== -1) {
         world.level.coins.splice(index, 1);
@@ -42,4 +41,3 @@ class Coin extends MovableObject {
     }, 1000);
   }
 }
-

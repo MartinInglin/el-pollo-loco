@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-  x = 100;
+  x = 6700; //Reset to 100 after Endboss programmed
   y = 250;
   height = 200;
   width = 140;
@@ -132,68 +132,67 @@ class Character extends MovableObject {
       this.idleAnimation();
       this.animationIsHurt();
       this.animationDie();
-      this.endLevelReached();
+      this.endLevelReached(20);
       this.checkThrowBottle();
-      this.previousBottlesCount =  world.level.throwableBottles.length;
+      this.previousBottlesCount = world.level.throwableBottles.length;
     });
   }
 
   applyGravityCharacter() {
-    let id = setInterval(() => {
-      this.applyGravity();
-    }, 40);
-    this.intervalIdsMovableObjects.push(id);
+    this.setStoppableInterval(this.applyGravity, 40)
   }
 
   /**
-   * This function moves the camera with the character and stops moving at the end of the level. It needs to be in sync with the function moveCharacter and the interval must be the same. Otherwise the character will flicker.
+   * This function moves the camera with the character and stops moving at the end of the level. It needs to be in sync with the function moveCharacter and the interval must be the same. Otherwise the character will flicker. The string in the end is used to store the interval individually so it can be stopped sparatedly.
    */
   moveCamera() {
-    let id = setInterval(() => {
-      if (this.x <= 300) {
-        world.camera_x = 0;
-      }
-      if (this.x > 300 && this.x < world.level.levelEnd - 420) {
-        world.camera_x = 300 - this.x;
-      }
-    }, 40);
-    this.intervalIdsMovableObjects.push(id);
-  }
+    this.setStoppableInterval(() => {
+        if (this.x <= 300) {
+            world.camera_x = 0;
+        }
+        if (this.x > 300 && this.x < world.level.levelEnd - 420) {
+            world.camera_x = 300 - this.x;
+        }
+    }, 40, "cameraMoveInterval");
+}
 
   /**
    * This function moves the character. It is checks frequently if the player presses left, right or up on the keyboard by checking the corresponding variables form the keyboard. It must be in sync with the "moveCamera" function.
    */
   moveCharacter() {
-    let id = setInterval(() => {
-      if (this.keyboard.LEFT && !this.endLevelLeftReached) {
-        this.moveLeft();
-        this.characterMovedLeft = true;
-        this.characterMovedRight = false;
-      }
-      if (this.keyboard.RIGHT && !this.endLevelRightReached) {
-        this.moveRight();
-        this.characterMovedLeft = false;
-        this.characterMovedRight = true;
-      }
-      if (!this.keyboard.LEFT && !this.keyboard.RIGHT && this.speedX >= 0) {
-        this.stopCharacter();
-      }
+    this.setStoppableInterval(() => {
+        if (this.keyboard.LEFT && !this.endLevelLeftReached) {
+            this.moveLeft();
+            this.characterMovedLeft = true;
+            this.characterMovedRight = false;
+        }
+        if (this.keyboard.RIGHT && !this.endLevelRightReached) {
+            this.moveRight();
+            this.characterMovedLeft = false;
+            this.characterMovedRight = true;
+        }
+        if (!this.keyboard.LEFT && !this.keyboard.RIGHT && this.speedX >= 0) {
+            this.stopCharacter();
+        }
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
-  }
+}
 
   /**
-   * This function is called after the player releases the left or right button. The character slides for a little longer. Therefore the two variables characterMovedLeft and -Right are used to see if the character hase moved before.
+   * This function is called after the player releases the left or right button. The character slides for a little longer. Therefore the two variables characterMovedLeft and -Right are used to see if the character hase moved before. If the charater is at the level end the function is not called.
    */
   stopCharacter() {
-    if (this.speedX >= 0) {
-      if (this.characterMovedLeft) {
-        this.x -= this.speedX;
-        this.speedX -= this.acceleration;
-      }
-      if (this.characterMovedRight) {
-        this.x += this.speedX;
-        this.speedX -= this.acceleration;
+    if (this.endLevelLeftReached || this.endLevelRightReached) {
+      this.speedX = 0;
+    } else {
+      if (this.speedX >= 0) {
+        if (this.characterMovedLeft) {
+          this.x -= this.speedX;
+          this.speedX -= this.acceleration;
+        }
+        if (this.characterMovedRight) {
+          this.x += this.speedX;
+          this.speedX -= this.acceleration;
+        }
       }
     }
   }
@@ -202,7 +201,7 @@ class Character extends MovableObject {
    * This function checks if the player presses any of the left, right or up buttons. In case it starts the animation and flips the image if the character changes direction.
    */
   characterWalkAnimation() {
-    this.idWalkAnimation = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.keyboard.LEFT && !this.jumpAnimationStarted && !this.isHurt) {
         this.otherDirection = true;
         this.startAnimationWalking();
@@ -215,7 +214,6 @@ class Character extends MovableObject {
         this.stopAudioWalking();
       }
     }, 70);
-    this.intervalIdsMovableObjects.push(this.idWalkAnimation);
   }
 
   /**
@@ -240,7 +238,7 @@ class Character extends MovableObject {
    * This function sets the state of the character. If the player presses a key, the idle animation is reset. If he doesn't press any key the idle animation starts. After 3 cycles of the idle animation the character starts sleeping.
    */
   idleAnimation() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.playerPressAnyKey()) {
         this.resetIdleAnimation();
       } else if (this.playerDontPressAnyKeyNoSleeping()) {
@@ -252,7 +250,6 @@ class Character extends MovableObject {
         this.characterStartSleeping();
       }
     }, 500);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -301,13 +298,12 @@ class Character extends MovableObject {
    * This function contains the movement of the character when he jumps. By increasing the amount of speedY the character jumps higher. It then plays the corresponding audio.
    */
   jump() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.keyboard.UP && !this.isAboveGround()) {
         this.speedY = 25;
         this.playAudioJump();
       }
     }, 60);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -322,7 +318,7 @@ class Character extends MovableObject {
    *This function executes the jump animation. It checks if the player pressed the up button or the animation is already running because it should not stop if the player releases the key. When the animation ran through completely it is reset and the jump audio plays again for the landing.
    */
   jumpAnimation() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.playerPressUpOrAnimationJumpRunning()) {
         this.jumpAnimationStarted = true;
         if (this.jumpAnimationNotFinished()) {
@@ -333,7 +329,6 @@ class Character extends MovableObject {
         }
       }
     }, 50);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -392,20 +387,23 @@ class Character extends MovableObject {
 
   /**
    * This function sets the interval to check if the player is at the end of the level.
+   *
+   * @param {number} endLevelLeft - Point set from the level or from the level script.
    */
-  endLevelReached() {
-    let id = setInterval(() => {
-      this.checkEndWorldLeft();
+  endLevelReached(endLevelLeft) {
+    this.setStoppableInterval(() => {
+      this.checkEndWorldLeft(endLevelLeft);
       this.checkEndWorldRight();
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
    * This function checks if the player is at the left end of the world.
+   *
+   * @param {number} endLevelLeft - Point set from the level or from the level script.
    */
-  checkEndWorldLeft() {
-    if (this.x <= 20) {
+  checkEndWorldLeft(endLevelLeft) {
+    if (this.x <= endLevelLeft + 50) {
       this.endLevelLeftReached = true;
     } else {
       this.endLevelLeftReached = false;
@@ -416,7 +414,7 @@ class Character extends MovableObject {
    * This function checks if the player is at the rigth end of the world.
    */
   checkEndWorldRight() {
-    if (this.x >= world.level.levelEnd - 200) {
+    if (this.x >= world.level.levelEnd - 150) {
       this.endLevelRightReached = true;
     } else {
       this.endLevelRightReached = false;
@@ -427,13 +425,12 @@ class Character extends MovableObject {
    * This function calls the hurt animation if the character hits an enemy.
    */
   animationIsHurt() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.healthCharacterDecreases()) {
         this.isHurt = true;
         this.startHurtAnimation();
       }
     }, 100);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -488,7 +485,7 @@ class Character extends MovableObject {
   checkThrowBottle() {
     let bottleThrown = false;
 
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       this.bottlesCollected = world.level.throwableBottles.length;
 
       if (this.keyboard.SPACE && this.bottlesCollected > 0 && !bottleThrown) {
@@ -501,7 +498,5 @@ class Character extends MovableObject {
         this.previousBottlesCount = this.bottlesCollected;
       }
     }, 40);
-
-    this.intervalIdsMovableObjects.push(id);
   }
 }

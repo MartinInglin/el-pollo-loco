@@ -24,9 +24,8 @@ class StatusbarBottles extends Statusbars{
    * This function sets the image of the statusbar for the bottles. It checks how many bottles the player has collected and displays the corresponding image. 
    */
   changeStatusbar() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       this.img = this.imageCache[this.images[world.character.bottlesCollected]];
     }, 100);
-    this.intervalsStatusbar.push(id);
   }
 }

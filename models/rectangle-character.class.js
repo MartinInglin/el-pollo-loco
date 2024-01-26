@@ -15,11 +15,10 @@ class RectangleCharacter extends MovableObject{
      * This function gets the position of the character. It is needed to place the corresponding rectangle right above the character.
      */
     getPositionCharacter() {
-      let id = setInterval(() => {
+      this.setStoppableInterval(() => {
         this.x = this.character.x + 30;
         this.y = this.character.y + 90;
       }, 40);
-      this.intervalIdsMovableObjects.push(id);
     }
   }
   

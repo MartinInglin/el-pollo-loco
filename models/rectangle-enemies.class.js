@@ -15,10 +15,9 @@ class RectangleEnemy extends MovableObject{
      * This function gets the position of the enemy. It is needed to place the corresponding rectangle right above the enemy.
    */
   getPositionEnemy() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       this.x = this.enemy.x;
       this.y = this.enemy.y;
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
   }
 }

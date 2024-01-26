@@ -24,7 +24,7 @@ class Collision {
       this.isCollidingBottle();
       this.enemyIsCollidingBottle();
       this.bottleIsCollidingGround();
-      this.enemyLeavesCanvas()
+      this.enemyLeavesCanvas();
     }, 40);
     this.intervalIdsRectanglesCollision.push(id);
   }
@@ -34,8 +34,13 @@ class Collision {
    */
   isCollidingEnemy() {
     const characterRect = this.rectangleCharacter[0];
-  
+
     this.rectanglesEnemies.forEach((enemy) => {
+      if (enemy.enemy instanceof Endboss && this.isCollidingObject(characterRect, enemy)) {
+        this.characterIsHurt();
+        this.characterIsDead();
+        return;
+      }
       if (
         world.character.isAboveGround() &&
         this.isCollidingObject(characterRect, enemy) &&
@@ -51,7 +56,7 @@ class Collision {
       }
     });
   }
-  
+
   /**
    * This function subtracts -20 from the characters health and sets a timeout so the player can move away from the enemy.
    */
@@ -81,7 +86,7 @@ class Collision {
    */
   isCollidingCoin() {
     const characterRect = this.rectangleCharacter[0];
-  
+
     this.rectanglesCoins.forEach((coin) => {
       if (this.isCollidingObject(characterRect, coin)) {
         coin.coin.health = 0;
@@ -92,13 +97,13 @@ class Collision {
       }
     });
   }
-  
+
   /**
    * This function checks if the character is colliding with a bottle. If so it destroys the bottle and creates a new object BottleThrowable and resets the variables bottlesCollected and previousBottlesCount in the character.
    */
   isCollidingBottle() {
     const characterRect = this.rectangleCharacter[0];
-  
+
     this.rectanglesBottles.forEach((bottle) => {
       if (this.isCollidingObject(characterRect, bottle) && world.level.throwableBottles.length < 5) {
         bottle.bottle.health = 0;
@@ -109,7 +114,7 @@ class Collision {
       }
     });
   }
-  
+
   /**
    * This functoin checks if an enemy is colliding with a thrown bottle. If so it destroys the enemy and the bottle and their corresponding rectangles.
    */
@@ -119,14 +124,19 @@ class Collision {
       this.rectanglesEnemies.forEach((enemy) => {
         if (this.isCollidingObject(bottleRect, enemy)) {
           world.level.throwableBottles[0].bottleHitsEnemy = true;
-          enemy.enemy.health = 0;
-          this.destroyRectangle(enemy, "rectanglesEnemies");
           this.destroyRectangle(bottleRect, "rectanglesBottlesThrowable");
+          if (enemy.enemy instanceof Endboss) {
+            enemy.enemy.health -= 20;
+            console.log(enemy.enemy.health);
+          } else {
+            enemy.enemy.health = 0;
+            this.destroyRectangle(enemy, "rectanglesEnemies");
+          }
         }
       });
     }
   }
-  
+
   /**
    * This function checks if the trown bottle is colliding with the ground. If so it destroys the rectangle of the bottle.
    */
@@ -142,9 +152,9 @@ class Collision {
 
   /**
    * This function checks if an object is above the ground.
-   * 
-   * 
-   * @param {object} object - Contains the object which is checked. 
+   *
+   *
+   * @param {object} object - Contains the object which is checked.
    * @returns - boolean
    */
   isAboveGround(object) {
@@ -164,7 +174,7 @@ class Collision {
 
   /**
    * This function stops all the intervals of an object and then destroys its rectangle.
-   * 
+   *
    * @param {object} object - The object is any rectangle.
    * @param {string} path - String of the path where the rectanlge is located (for example "rectanglesEnemies").
    */
@@ -178,7 +188,7 @@ class Collision {
 
   /**
    * This function checks if two objects are colliding.
-   * 
+   *
    * @param {object} object1 - The first object of the collision.
    * @param {object} object2 - The second object of the collision.
    * @returns - boolean
@@ -191,7 +201,7 @@ class Collision {
       object1.y + object1.height > object2.y
     );
   }
-  
+
   /**
    * This function stops alle the intervals of the rectangles.
    */

@@ -12,6 +12,9 @@ class MovableObject extends DrawableObject {
     die: 0,
     bottleRotation: 0,
     bottleSplash: 0,
+    alert: 0,
+    attack: 0,
+    fly: 0,
   };
   speedY = 0;
   speedX = 0;
@@ -19,6 +22,7 @@ class MovableObject extends DrawableObject {
   health = 100;
   intervalIdsMovableObjects = [];
   isFyling = false;
+  individualIntervalIds = {};
 
   /**
    * This function moves any object to the left side. For the look there is an acceleration at the beginning of the movement because this feels more natural.
@@ -97,14 +101,14 @@ class MovableObject extends DrawableObject {
    * This function is called when the health-value of an enemy is 0. It stops its intervals and calls the animation for death.
    */
   enemyDies() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       if (this.health === 0 || this.x < -100) {
         this.stopIntervalsMovableObjects();
         this.enemyDiesAnimation();
         this.deleteEnemy();
       }
     }, 40);
-    this.intervalIdsMovableObjects.push(id);
+
   }
 
   /**
@@ -126,6 +130,25 @@ class MovableObject extends DrawableObject {
       }
     }, 1000);
   }
+
+  /**
+   * This function sets stoppable intervals. It pushes the IDs into an array. If the interval should be stopped individually a key an be given as a string. In this case it is stored in the object "individualIntervalIds".
+   * 
+   * @param {function} func - This is the function inside the interval.
+   * @param {number} time - The time for the interval. 
+   * @param {string} key - Used to store an individual interval into the object "individualIntervalIds".
+   */
+  setStoppableInterval(func, time, key) {
+    let id = setInterval(() => func.apply(this), time);
+    this.intervalIdsMovableObjects.push(id);
+
+    if (key) {
+      if (!this.individualIntervalIds[key]) {
+        this.individualIntervalIds[key] = [];
+      }
+      this.individualIntervalIds[key].push(id);
+    }
+  }  
 
   /**
    * This function stops all the intervals of this movable object. The id's are stored in the movableObject class.
