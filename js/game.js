@@ -11,7 +11,7 @@ function init() {
 }
 
 /**
- * This function leads the player to the index.html in case he refreshes the page. 
+ * This function leads the player to the index.html in case he refreshes the page.
  */
 function redirectOnRefreseh() {
   const navigationEntries = performance.getEntriesByType("navigation");
@@ -20,6 +20,11 @@ function redirectOnRefreseh() {
   }
 }
 
+/**
+ * This function checks if the world exists. It is used by many different objects and is therefore in the game.js.
+ * 
+ * @returns - boolean
+ */
 function checkWorldExistence() {
   return new Promise((resolve) => {
     const checkInterval = setInterval(() => {
@@ -29,4 +34,18 @@ function checkWorldExistence() {
       }
     }, 100);
   });
+}
+
+/**
+ * This function reloads the page if the player wants to restart the game. It is called from a modal in game.html.
+ */
+function refreshPage() {
+  location.reload();
+}
+
+/**
+ * This function leads the player back to the index page. It is called from a modal in game.html.
+ */
+function goToMenu() {
+  window.location.href = 'index.html';
 }

@@ -33,6 +33,9 @@ class Chicken extends MovableObject {
   });
   }
 
+  /**
+   * This function applies gravity to chicken. It is especially needed in the endgame where the endboss throws the chicken down.
+   */
   applyGravityChicken() {
     this.setStoppableInterval(this.applyGravity, 40)
   }

@@ -1,10 +1,42 @@
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 canvas {
+  background-color: black;
+}
+
+.modal-content {
+  background-color: rgba(250, 177, 43, 0.737);
+}
+
+.modal-body img {
+  width: 100%;
+}
+
+.btn {
+  border-color: black;
+}
+
+.btn:hover {
+    border-color: black;
+}
+
+.btn-primary {
+  background-color: rgba(165, 42, 42, 0.523);
+}
+
+.btn-primary:hover {
+    background-color: brown;
+}
+
+.btn-secondary {
+    background-color: rgba(0, 0, 0, 0.523);
+}
+
+.btn-secondary:hover {
     background-color: black;
 }

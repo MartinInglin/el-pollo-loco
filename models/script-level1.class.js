@@ -382,21 +382,26 @@ class ScriptLevel1 {
   }
 
   checkEndbossDefeated() {
-    setInterval(() => {
+    let id = setInterval(() => {
       if (this.endboss.health == 0) {
         this.clearAllTimeouts();
         world.stopAllIntervals();
         this.sequenceGameWon();
+        clearInterval(id);
       }
     }, 200);
   }
 
   sequenceGameWon() {
-    this.dieAnimation();
+    this.executeForTime(this.dieAnimation, 200, 2000);
+    setTimeout(() => {
+      const modalWin = new bootstrap.Modal(document.getElementById("staticBackdropYouWin"));
+      modalWin.show();
+    }, 2000);
   }
 
   resetHealthEndboss() {
-    world.level.enemies[0].health = 20;
+    world.level.enemies[0].health = 100;
   }
 
   resetStatusbar(color) {

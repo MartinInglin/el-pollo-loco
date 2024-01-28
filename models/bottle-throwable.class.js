@@ -35,36 +35,60 @@ class BottleThrowable extends MovableObject {
     checkWorldExistence().then(() => {});
   }
 
+  /**
+   * This function contains all the functions that are needed for the anmiation and collision of a thrown bottle.
+   */
   throwBottle() {
     const bottleThrownRight = !world.character.otherDirection;
     this.createRectangleBottleThrowable();
     this.getPositionCharacter();
     this.speedY = 25;
     this.setStoppableInterval(() => {
-      if (bottleThrownRight) {
-        this.moveRight();
-      } else {
-        this.moveLeft();
-      }
+      this.moveBottle(bottleThrownRight);
       this.applyGravity();
       this.throwBottleAnimation();
       this.checkBottleDestroyed();
     }, 40);
   }
 
+  /**
+   * This function moves the bottle to left or right depending on the direction the player has when he throws the bottle.
+   * 
+   * @param {boolean} bottleThrownRight - This is the same as "world.character.otherDirection" but needs to be stored here because the bottle should not change its direction when the player turns around.
+   */
+  moveBottle(bottleThrownRight) {
+    if (bottleThrownRight) {
+      this.moveRight();
+    } else {
+      this.moveLeft();
+    }
+  }
+
+  /**
+   * This funciton creates a new rectangle for the collision.
+   */
   createRectangleBottleThrowable() {
     world.collision.rectanglesBottlesThrowable.push(new RectangleBottleThrowable());
   }
 
+  /**
+   * This function gets the position of the character so the bottle is created where the character is at this time.
+   */
   getPositionCharacter() {
     this.x = world.character.x + 20;
     this.y = world.character.y + 100;
   }
 
+  /**
+   * This function calls the actual animation of the bottle rotation.
+   */
   throwBottleAnimation() {
     this.playContinuousAnimation(this.imagesRotation, "bottleRotation");
   }
 
+  /**
+   * This function checks if the bottle hits the ground or an enemy. In both cases the bottle is destroyed. In this case it stops all the intervals and calls the splash animation.
+   */
   checkBottleDestroyed() {
     if (!this.isAboveGround() || this.bottleHitsEnemy) {
       this.stopIntervalsMovableObjects();
@@ -76,6 +100,9 @@ class BottleThrowable extends MovableObject {
     }
   }
 
+  /**
+   * This function calls the splash animation in case the bottle is destroyed.
+   */
   playSplashAnimation() {
     let id = setInterval(() => {
       this.playSingleRunAnimation(this.imagesSplash, "bottleSplash");
@@ -83,6 +110,9 @@ class BottleThrowable extends MovableObject {
     this.intervalIdsMovableObjects.push(id);
   }
 
+  /**
+   * This function deletes the bottle from the array "throwableBottles".
+   */
   destroyBottleThrowable() {
     const index = world.level.throwableBottles.indexOf(this);
     if (index !== -1) {

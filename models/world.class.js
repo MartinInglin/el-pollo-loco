@@ -7,6 +7,7 @@ class World {
   level = new Level(level1);
   collision = new Collision();
   statusbars = [new StatusbarHealthCharacter(), new StatusbarCoins(), new StatusbarBottles()];
+  endScreens = [];
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -41,6 +42,8 @@ class World {
     this.ctx.translate(-this.camera_x, 0);
 
     this.addStatusbarsToMap(this.statusbars);
+
+    this.addObjectsToMap(this.endScreens)
 
     let self = this;
     requestAnimationFrame(() => {

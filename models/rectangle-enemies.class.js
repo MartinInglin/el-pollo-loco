@@ -1,4 +1,4 @@
-class RectangleEnemy extends MovableObject{
+class RectangleEnemy extends MovableObject {
   enemy;
 
   constructor(enemy) {
@@ -12,7 +12,7 @@ class RectangleEnemy extends MovableObject{
   }
 
   /**
-     * This function gets the position of the enemy. It is needed to place the corresponding rectangle right above the enemy.
+   * This function gets the position of the enemy. It is needed to place the corresponding rectangle right above the enemy.
    */
   getPositionEnemy() {
     this.setStoppableInterval(() => {

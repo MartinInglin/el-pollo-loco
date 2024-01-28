@@ -27,6 +27,7 @@ class StatusbarHealthEndboss extends Statusbars {
   x = 440;
   y = 0;
   actualStatusbar;
+  endboss = world.level.enemies[0];
 
   constructor() {
     super().loadImage("img/7_statusbars/2_statusbar_endboss/green/green100.png");
@@ -41,11 +42,14 @@ class StatusbarHealthEndboss extends Statusbars {
     });
   }
 
+  /**
+   * This function changes the statusbar of the health of the endboss. It compares the health of the endboss with the array "healthValues". If the health is below a value of this array the index is changed.
+   */
   changeStatusbar() {
     const healthValues = [100, 80, 60, 40, 20, 0];
   
     this.setStoppableInterval(() => {
-      const enemyHealth = world.level.enemies[0].health;
+      const enemyHealth = this.endboss.health;
       for (let i = 0; i < healthValues.length; i++) {
         if (enemyHealth >= healthValues[i]) {
           const index = i;

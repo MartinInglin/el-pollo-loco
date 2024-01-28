@@ -138,6 +138,9 @@ class Character extends MovableObject {
     });
   }
 
+  /**
+   * This function applies gravity to the character. It is needed separatedly because other objects like bottles need different values so it looks natural.
+   */
   applyGravityCharacter() {
     this.setStoppableInterval(this.applyGravity, 40)
   }
@@ -472,31 +475,65 @@ class Character extends MovableObject {
   }
 
   /**
-   *This function contains the dying animation of the character. After showing the whole array of the images it displays the last image of the character forever.
+   * This function plays the animation if the character dies.
    */
   animationDie() {
     setInterval(() => {
       if (this.health <= 0) {
         this.playSingleRunAnimation(this.imagesDie, "die");
+        this.showModalGameOver();
       }
     }, 100);
+
   }
 
+  /**
+   * This function shows the "game over" screen 2 seconds after the character has died. The modal is located in game.html.
+   */
+  showModalGameOver() {
+    setTimeout(() => {
+      const modalGameOver = new bootstrap.Modal(document.getElementById("staticBackdropGameOver"));
+      modalGameOver.show();
+    }, 2000);
+  }
+
+  /**
+   * This function checks if the player can throw a bottle. If so it calls the function to throw a bottle.
+   */
   checkThrowBottle() {
     let bottleThrown = false;
 
     this.setStoppableInterval(() => {
       this.bottlesCollected = world.level.throwableBottles.length;
 
-      if (this.keyboard.SPACE && this.bottlesCollected > 0 && !bottleThrown) {
+      if (this.playerCanThrowBottle(bottleThrown)) {
         bottleThrown = true;
         world.level.throwableBottles[0].throwBottle();
         this.previousBottlesCount -= 1;
       }
-      if (this.bottlesCollected === this.previousBottlesCount) {
+      if (this.bottleIsThrown()) {
         bottleThrown = false;
         this.previousBottlesCount = this.bottlesCollected;
       }
     }, 40);
+  }
+
+  /**
+   * This function checks if the player can throw a bottle. Therefore he needs to press the space button, have a bottle and there must be no bottle already thrown. 
+   * 
+   * @param {boolean} bottleThrown - Contains if a bottle has been thrown.
+   * @returns - boolean
+   */
+  playerCanThrowBottle(bottleThrown) {
+    return this.keyboard.SPACE && this.bottlesCollected > 0 && !bottleThrown;
+  }
+
+  /**
+   * This function checks if the collected bottles and previous bottles are the same. This happens if the thrown bottle is destroyed. Then it resets the previous bottles count.
+   * 
+   * @returns - boolean
+   */
+  bottleIsThrown() {
+    return this.bottlesCollected === this.previousBottlesCount;
   }
 }
