@@ -59,16 +59,15 @@ class Endboss extends MovableObject {
     this.loadImages(this.imagesAttack);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDead);
-    this.loadImages(this.imagesFly);
 
     this.x = xPosition;
 
     this.applyGravityEndboss();
-    this.intervalForChecks();
+    this.intervalForChecks(); //delete after Tests
   }
 
   applyGravityEndboss() {
-    this.setStoppableInterval(this.applyGravity, 40)
+    this.setStoppableInterval(this.applyGravity, 40, "applyGravityEndboss")
   }
 
   walkingAnimation() {
@@ -91,6 +90,10 @@ class Endboss extends MovableObject {
 
   hurtAnimation() {
     this.playSingleRunAnimation(this.imagesHurt, "hurt");
+  }
+
+  dieAnimation() {
+    this.playSingleRunAnimation(this.imagesDead, "die");
   }
 
   jump() {

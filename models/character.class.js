@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-  x = 6700; //Reset to 100 after Endboss programmed
+  x = 6600; //Reset to 100 after Endboss programmed
   y = 250;
   height = 200;
   width = 140;

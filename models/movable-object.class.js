@@ -105,10 +105,11 @@ class MovableObject extends DrawableObject {
       if (this.health === 0 || this.x < -100) {
         this.stopIntervalsMovableObjects();
         this.enemyDiesAnimation();
-        this.deleteEnemy();
+        setTimeout(() => {
+          this.deleteEnemy();
+        }, 200);
       }
     }, 40);
-
   }
 
   /**
@@ -123,19 +124,17 @@ class MovableObject extends DrawableObject {
    * This function removes the enemy from the array "world.level.enemies". This happens after 1s so the dying animation stays for this time and then the enemy vanishes.
    */
   deleteEnemy() {
-    setTimeout(() => {
-      const index = world.level.enemies.indexOf(this);
-      if (index !== -1) {
-        world.level.enemies.splice(index, 1);
-      }
-    }, 1000);
+    const index = world.level.enemies.indexOf(this);
+    if (index !== -1) {
+      world.level.enemies.splice(index, 1);
+    }
   }
 
   /**
    * This function sets stoppable intervals. It pushes the IDs into an array. If the interval should be stopped individually a key an be given as a string. In this case it is stored in the object "individualIntervalIds".
-   * 
+   *
    * @param {function} func - This is the function inside the interval.
-   * @param {number} time - The time for the interval. 
+   * @param {number} time - The time for the interval.
    * @param {string} key - Used to store an individual interval into the object "individualIntervalIds".
    */
   setStoppableInterval(func, time, key) {
@@ -148,7 +147,7 @@ class MovableObject extends DrawableObject {
       }
       this.individualIntervalIds[key].push(id);
     }
-  }  
+  }
 
   /**
    * This function stops all the intervals of this movable object. The id's are stored in the movableObject class.

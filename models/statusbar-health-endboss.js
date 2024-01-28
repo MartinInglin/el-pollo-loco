@@ -26,6 +26,7 @@ class StatusbarHealthEndboss extends Statusbars {
   img;
   x = 440;
   y = 0;
+  actualStatusbar;
 
   constructor() {
     super().loadImage("img/7_statusbars/2_statusbar_endboss/green/green100.png");

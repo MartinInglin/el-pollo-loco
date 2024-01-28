@@ -24,7 +24,7 @@ class Collision {
       this.isCollidingBottle();
       this.enemyIsCollidingBottle();
       this.bottleIsCollidingGround();
-      this.enemyLeavesCanvas();
+      this.enemyLeavesCanvas(-100);
     }, 40);
     this.intervalIdsRectanglesCollision.push(id);
   }
@@ -47,8 +47,8 @@ class Collision {
         world.character.speedY < 0 &&
         !enemy.enemy.isFlying
       ) {
-        enemy.enemy.health = 0;
         this.destroyRectangle(enemy, "rectanglesEnemies");
+        enemy.enemy.health = 0;
         world.character.miniJump();
       } else if (this.isCollidingObject(characterRect, enemy)) {
         this.characterIsHurt();
@@ -127,7 +127,6 @@ class Collision {
           this.destroyRectangle(bottleRect, "rectanglesBottlesThrowable");
           if (enemy.enemy instanceof Endboss) {
             enemy.enemy.health -= 20;
-            console.log(enemy.enemy.health);
           } else {
             enemy.enemy.health = 0;
             this.destroyRectangle(enemy, "rectanglesEnemies");
@@ -164,9 +163,9 @@ class Collision {
   /**
    * This function checks if an enemy has left the canvas on the left side. If so it calls for stopping the intervals and deleting the object.
    */
-  enemyLeavesCanvas() {
+  enemyLeavesCanvas(endCanvasLeft) {
     this.rectanglesEnemies.forEach((enemy) => {
-      if (enemy.x < -100) {
+      if (enemy.x < endCanvasLeft) {
         this.destroyRectangle(enemy, "rectanglesEnemies");
       }
     });

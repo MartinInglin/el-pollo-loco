@@ -12,14 +12,16 @@ class Chicken extends MovableObject {
   x;
   height = 80;
   width = 80;
+  adjustmentSprite = 0;
   AUDIO_WALKING = new Audio("audio/chicken-cackling.mp3");
 
-  constructor(xPosition) {
+  constructor(xPosition, yPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imageDead);
 
     this.x = xPosition;
+    this.y = yPosition
     this.speed = 0.4;
 
     checkWorldExistence().then(() => {
@@ -27,7 +29,12 @@ class Chicken extends MovableObject {
     this.chickenMoveLeft();
     this.chickenWalkingAnimation();
     this.enemyDies()
+    this.applyGravityChicken();
   });
+  }
+
+  applyGravityChicken() {
+    this.setStoppableInterval(this.applyGravity, 40)
   }
 
   /**
