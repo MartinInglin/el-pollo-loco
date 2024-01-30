@@ -1,5 +1,6 @@
 class Level {
   enemies;
+  endboss;
   clouds;
   coins;
   bottles;
@@ -12,6 +13,7 @@ class Level {
 
   constructor(actualLevel) {
     this.enemies = actualLevel.enemies;
+    this.endboss = actualLevel.endboss;
     this.clouds = actualLevel.clouds;
     this.coins = actualLevel.coins;
     this.bottles = actualLevel.bottles;

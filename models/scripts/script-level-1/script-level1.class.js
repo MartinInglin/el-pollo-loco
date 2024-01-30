@@ -1,8 +1,8 @@
-class ScriptLevel1 {
+class ScriptLevel1 extends Script {
   character;
   enemies;
-  intervalIdsScript = [];
   endboss;
+  intervalIdsScript = [];
   timeoutIds = [];
 
   triggerPoints = [
@@ -55,8 +55,8 @@ class ScriptLevel1 {
         this.createNewChickenSmallFlying(this.triggerPoints[4].xCoordinate + 700, 250);
         this.createNewChickenSmall(this.triggerPoints[4].xCoordinate + 750);
         this.createNewChicken(this.triggerPoints[4].xCoordinate + 800, 370);
-        this.createNewChicken(this.triggerPoints[4].xCoordinate + 850, 370);
-        this.createNewChickenSmall(this.triggerPoints[4].xCoordinate + 900);
+        this.createNewChicken(this.triggerPoints[4].xCoordinate + 900, 370);
+        this.createNewChickenSmall(this.triggerPoints[4].xCoordinate + 950);
       },
     },
     {
@@ -69,9 +69,11 @@ class ScriptLevel1 {
   ];
 
   constructor() {
+    super();
     checkWorldExistence().then(() => {
       this.character = world.character;
       this.enemies = world.level.enemies;
+      this.endboss = world.level.endboss;
       this.startScript();
     });
   }
@@ -90,9 +92,10 @@ class ScriptLevel1 {
   }
 
   startSequenceEndboss() {
+    this.deleteAllUnusedObjects();
+    this.createEndboss(this.triggerPoints[5].xCoordinate + 400);
     this.freezeCamera();
     this.setEndLevelLeft();
-    this.deleteAllUnusedObjects();
     this.sequenceEndbossAppears();
   }
 
@@ -114,7 +117,6 @@ class ScriptLevel1 {
   }
 
   sequenceEndbossAppears() {
-    this.createEndboss(this.triggerPoints[5].xCoordinate + 400);
     this.createStatusbarEndboss();
     this.endbossWalkInRight();
     setTimeout(() => {
@@ -126,19 +128,19 @@ class ScriptLevel1 {
   }
 
   endbossWalkInRight() {
-    this.executeForTime(this.moveLeft, 40, 2000);
-    this.executeForTime(this.walkingAnimation, 100, 2000);
+    this.executeForTime(this.endbossMoveLeft, 40, 2000);
+    this.executeForTime(this.endbossWalkingAnimation, 100, 2000);
   }
 
   sequenceEndbossAngry() {
     setInterval(() => {
-      this.alertAnimation();
+      this.endbossAlertAnimation();
     }, 200);
   }
 
   sequenceJumpAttack() {
     this.createNewBottles(1);
-    this.attackAnimation();
+    this.endbossAttackAnimation();
     this.startJumpAttack();
   }
 
@@ -160,16 +162,16 @@ class ScriptLevel1 {
   }
 
   endbossDefeated() {
-    return world.level.enemies[0].health <= 0;
+    return this.endboss.health <= 0;
   }
 
   continueJumping() {
     if (!this.endboss.otherDirection && this.endboss.x > 6300) {
-      this.endbossJumpAttack("left", this.moveLeft);
+      this.endbossJumpAttack("left", this.endbossMoveLeft);
     } else {
       this.endboss.otherDirection = true;
       if (this.endboss.otherDirection && this.endboss.x < 7300) {
-        this.endbossJumpAttack("right", this.moveRight);
+        this.endbossJumpAttack("right", this.endbossMoveRight);
       } else {
         this.endboss.otherDirection = false;
         this.createNewBottles(3);
@@ -195,24 +197,24 @@ class ScriptLevel1 {
   }
 
   stopAnimationAttack() {
-    clearInterval(world.level.enemies[0].individualIntervalIds.attackAnimationEndboss[0]);
-    world.level.enemies[0].individualIntervalIds.attackAnimationEndboss = [];
+    clearInterval(this.endboss.individualIntervalIds.attackAnimationEndboss[0]);
+    this.endboss.individualIntervalIds.attackAnimationEndboss = [];
   }
 
   sequenceEndbossHurt() {
-    this.executeForTime(this.hurtAnimation, 100, 2000);
+    this.executeForTime(this.endbossHurtAnimation, 100, 2000);
   }
 
   sequenceFlyAttack() {
-    this.attackAnimation();
+    this.endbossAttackAnimation();
     this.startFlying();
   }
 
   startFlying() {
     this.stopGravity();
     const id = setInterval(() => {
-      if (world.level.enemies[0].y >= -50) {
-        world.level.enemies[0].y -= 10;
+      if (this.endboss.y >= -50) {
+        this.endboss.y -= 10;
       } else {
         this.resetHealthEndboss();
         this.resetStatusbar("imagesBlue");
@@ -223,7 +225,7 @@ class ScriptLevel1 {
   }
 
   stopGravity() {
-    clearInterval(world.level.enemies[0].individualIntervalIds.applyGravityEndboss[0]);
+    clearInterval(this.endboss.individualIntervalIds.applyGravityEndboss[0]);
   }
 
   startFlyingAttack() {
@@ -249,12 +251,12 @@ class ScriptLevel1 {
     elapsedTimeObj.value += 40;
 
     if (!this.endboss.otherDirection && this.endboss.x > 6100) {
-      this.moveLeft();
+      this.endbossMoveLeft();
       this.handleChickenCreation(elapsedTimeObj);
     } else {
       this.endboss.otherDirection = true;
       if (this.endboss.otherDirection && this.endboss.x < 7300) {
-        this.moveRight();
+        this.endbossMoveRight();
         this.handleChickenCreation(elapsedTimeObj);
       } else {
         this.endboss.otherDirection = false;
@@ -272,7 +274,7 @@ class ScriptLevel1 {
 
   launchShootingSequence() {
     this.stopAnimationAttack();
-    this.resetHurtAnimation();
+    this.resetEndbossHurtAnimation();
     this.sequenceEndbossHurt();
     setTimeout(() => {
       this.executeForTime(this.endbossMoveOut, 10, 2000);
@@ -283,10 +285,10 @@ class ScriptLevel1 {
   }
 
   endbossMoveOut = () => {
-    if (!world.level.enemies[0].otherDirection) {
-      this.moveLeft();
+    if (!this.endboss.otherDirection) {
+      this.endbossMoveLeft();
     } else {
-      this.moveRight();
+      this.endbossMoveRight();
     }
   };
 
@@ -314,7 +316,7 @@ class ScriptLevel1 {
   moveInRight() {
     this.executeForTime(
       () => {
-        this.moveLeft();
+        this.endbossMoveLeft();
       },
       100,
       1500
@@ -324,7 +326,7 @@ class ScriptLevel1 {
   moveOutRight() {
     this.executeForTime(
       () => {
-        this.moveRight();
+        this.endbossMoveRight();
       },
       100,
       1500
@@ -353,7 +355,7 @@ class ScriptLevel1 {
   moveInLeft() {
     this.executeForTime(
       () => {
-        this.moveRight();
+        this.endbossMoveRight();
       },
       100,
       2000
@@ -363,7 +365,7 @@ class ScriptLevel1 {
   moveOutLeft() {
     this.executeForTime(
       () => {
-        this.moveLeft();
+        this.endbossMoveLeft();
       },
       100,
       2000
@@ -393,122 +395,10 @@ class ScriptLevel1 {
   }
 
   sequenceGameWon() {
-    this.executeForTime(this.dieAnimation, 200, 2000);
+    this.executeForTime(this.endbossDieAnimation, 200, 2000);
     setTimeout(() => {
       const modalWin = new bootstrap.Modal(document.getElementById("staticBackdropYouWin"));
       modalWin.show();
     }, 2000);
-  }
-
-  resetHealthEndboss() {
-    world.level.enemies[0].health = 100;
-  }
-
-  resetStatusbar(color) {
-    world.statusbars[3].actualStatusbar = world.statusbars[3][color];
-  }
-
-  moveLeft() {
-    world.level.enemies[0].moveLeft();
-  }
-
-  moveRight() {
-    world.level.enemies[0].moveRight();
-  }
-
-  walkingAnimation() {
-    world.level.enemies[0].walkingAnimation();
-  }
-
-  alertAnimation() {
-    world.level.enemies[0].alertAnimation();
-  }
-
-  attackAnimation() {
-    world.level.enemies[0].attackAnimation();
-  }
-
-  hurtAnimation() {
-    world.level.enemies[0].hurtAnimation();
-  }
-
-  resetHurtAnimation() {
-    world.level.enemies[0].currentImageIndices.hurt = 0;
-  }
-
-  dieAnimation() {
-    world.level.enemies[0].dieAnimation();
-  }
-
-  createNewChicken(xPosition, yPosition) {
-    world.level.enemies.push(new Chicken(xPosition, yPosition));
-    world.collision.rectanglesEnemies = world.level.enemies.map((enemy) => new RectangleEnemy(enemy));
-  }
-
-  createNewChickenSmall(xPosition) {
-    world.level.enemies.push(new ChickenSmall(xPosition));
-    world.collision.rectanglesEnemies = world.level.enemies.map((enemy) => new RectangleEnemy(enemy));
-  }
-
-  createNewChickenSmallFlying(xPosition, yPosition) {
-    world.level.enemies.push(new ChickenSmallFlying(xPosition, yPosition));
-    world.collision.rectanglesEnemies = world.level.enemies.map((enemy) => new RectangleEnemy(enemy));
-  }
-
-  createEndboss(xPosition) {
-    world.level.enemies.push(new Endboss(xPosition));
-    world.collision.rectanglesEnemies = world.level.enemies.map((enemy) => new RectangleEnemy(enemy));
-    this.endboss = world.level.enemies[0];
-  }
-
-  createStatusbarEndboss() {
-    world.statusbars.push(new StatusbarHealthEndboss());
-  }
-
-  createNewBottles(amountOfBottles) {
-    for (let i = 0; i < amountOfBottles; i++) {
-      if (world.level.bottles.length + world.character.bottlesCollected <= 3) {
-        const xPosition = this.getRandomPositionBottle();
-        world.level.bottles.push(new Bottle(xPosition));
-        world.collision.rectanglesBottles = world.level.bottles.map((bottle) => new RectangleBottle(bottle));
-      }
-    }
-  }
-
-  getRandomPositionBottle() {
-    return Math.floor(Math.random() * (6800 - 6300 + 1)) + 6500;
-  }
-
-  deleteChickenNotOnCanvas() {
-    world.collision.rectanglesEnemies.forEach((enemy) => {
-      if (enemy.x < 6000) {
-        enemy.enemy.health = 0;
-        world.collision.destroyRectangle(enemy, "rectanglesEnemies");
-      }
-    });
-  }
-
-  executeForTime(func, interval, duration) {
-    const intervalId = setInterval(() => {
-      func();
-    }, interval);
-    this.setStoppableTimeout(() => clearInterval(intervalId), duration);
-  }
-
-  setStoppableTimeout(func, duration) {
-    const timeoutId = setTimeout(() => {
-      func();
-      const index = this.timeoutIds.indexOf(timeoutId);
-      if (index !== -1) {
-        this.timeoutIds.splice(index, 1);
-      }
-    }, duration);
-
-    this.timeoutIds.push(timeoutId);
-  }
-
-  clearAllTimeouts() {
-    this.timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
-    this.timeoutIds = [];
   }
 }

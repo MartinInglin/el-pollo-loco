@@ -29,12 +29,14 @@ class World {
     
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.endboss);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.addObjectsToMap(this.level.throwableBottles);
 
     this.addRectanglesCollisionToMap(this.collision.rectangleCharacter);
     this.addRectanglesCollisionToMap(this.collision.rectanglesEnemies);
+    this.addRectanglesCollisionToMap(this.collision.rectangleEndboss);
     this.addRectanglesCollisionToMap(this.collision.rectanglesCoins);
     this.addRectanglesCollisionToMap(this.collision.rectanglesBottles);
     this.addRectanglesCollisionToMap(this.collision.rectanglesBottlesThrowable);

@@ -1,6 +1,7 @@
 class Collision {
   rectangleCharacter = [new RectangleCharacter()];
   rectanglesEnemies = [];
+  rectangleEndboss = [];
   rectanglesCoins = level1.coins.map((coin) => new RectangleCoin(coin));
   rectanglesBottles = level1.bottles.map((bottle) => new RectangleBottle(bottle));
   rectanglesBottlesThrowable = [];
@@ -19,10 +20,12 @@ class Collision {
    */
   checkCollisions() {
     let id = setInterval(() => {
-      this.isCollidingEnemy();
-      this.isCollidingCoin();
-      this.isCollidingBottle();
+      this.characterIsCollidingEnemy();
+      this.characterIsCollidingCoin();
+      this.characterIsCollidingBottle();
+      this.characterIsCollidingEndboss();
       this.enemyIsCollidingBottle();
+      this.enbossIsCollidingBottle();
       this.bottleIsCollidingGround();
       this.enemyLeavesCanvas(-100);
     }, 40);
@@ -32,15 +35,10 @@ class Collision {
   /**
    * This function checks if the character is colliding with an enemy. It also checks if the character is above ground and if the character is moving towards the ground.
    */
-  isCollidingEnemy() {
+  characterIsCollidingEnemy() {
     const characterRect = this.rectangleCharacter[0];
 
     this.rectanglesEnemies.forEach((enemy) => {
-      if (enemy.enemy instanceof Endboss && this.isCollidingObject(characterRect, enemy)) {
-        this.characterIsHurt();
-        this.characterIsDead();
-        return;
-      }
       if (
         world.character.isAboveGround() &&
         this.isCollidingObject(characterRect, enemy) &&
@@ -53,6 +51,18 @@ class Collision {
       } else if (this.isCollidingObject(characterRect, enemy)) {
         this.characterIsHurt();
         this.characterIsDead();
+      }
+    });
+  }
+
+  characterIsCollidingEndboss() {
+    const characterRect = this.rectangleCharacter[0];
+
+    this.rectangleEndboss.forEach((enemy) => {
+      if (this.isCollidingObject(characterRect, enemy)) {
+        this.characterIsHurt();
+        this.characterIsDead();
+        return;
       }
     });
   }
@@ -84,7 +94,7 @@ class Collision {
   /**
    * This function checks if the character is colliding with a coin. If so it counts plus 1 on "world.character.coinsCollected" and destroys the rectangle of the coin. The player can only collect 5 coins.
    */
-  isCollidingCoin() {
+  characterIsCollidingCoin() {
     const characterRect = this.rectangleCharacter[0];
 
     this.rectanglesCoins.forEach((coin) => {
@@ -101,7 +111,7 @@ class Collision {
   /**
    * This function checks if the character is colliding with a bottle. If so it destroys the bottle and creates a new object BottleThrowable and resets the variables bottlesCollected and previousBottlesCount in the character.
    */
-  isCollidingBottle() {
+  characterIsCollidingBottle() {
     const characterRect = this.rectangleCharacter[0];
 
     this.rectanglesBottles.forEach((bottle) => {
@@ -131,6 +141,20 @@ class Collision {
             enemy.enemy.health = 0;
             this.destroyRectangle(enemy, "rectanglesEnemies");
           }
+        }
+      });
+    }
+  }
+
+  enbossIsCollidingBottle() {
+    if (this.rectanglesBottlesThrowable.length > 0) {
+      const bottleRect = this.rectanglesBottlesThrowable[0];
+      this.rectangleEndboss.forEach((enemy) => {
+        if (this.isCollidingObject(bottleRect, enemy)) {
+          world.level.throwableBottles[0].bottleHitsEnemy = true;
+          this.destroyRectangle(bottleRect, "rectanglesBottlesThrowable");
+          enemy.enemy.health -= 20;
+          this.destroyRectangle(enemy, "rectanglesEnemies");
         }
       });
     }

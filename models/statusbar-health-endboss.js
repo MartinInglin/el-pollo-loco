@@ -27,7 +27,7 @@ class StatusbarHealthEndboss extends Statusbars {
   x = 440;
   y = 0;
   actualStatusbar;
-  endboss = world.level.enemies[0];
+  endboss = world.level.endboss[0];
 
   constructor() {
     super().loadImage("img/7_statusbars/2_statusbar_endboss/green/green100.png");
