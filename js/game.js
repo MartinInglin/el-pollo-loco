@@ -1,5 +1,6 @@
 let canvas;
 let world;
+let fullscreenOn = false;
 
 /**
  * This function initializes the world. It is executed when game.html is loaded.
@@ -7,6 +8,7 @@ let world;
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas);
+  //dectectMobileDevice();
   //redirectOnRefreseh();
 }
 
@@ -22,7 +24,7 @@ function redirectOnRefreseh() {
 
 /**
  * This function checks if the world exists. It is used by many different objects and is therefore in the game.js.
- * 
+ *
  * @returns - boolean
  */
 function checkWorldExistence() {
@@ -47,5 +49,7 @@ function refreshPage() {
  * This function leads the player back to the index page. It is called from a modal in game.html.
  */
 function goToMenu() {
-  window.location.href = 'index.html';
+  window.location.href = "index.html";
 }
+
+

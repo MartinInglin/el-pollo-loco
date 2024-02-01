@@ -110,7 +110,7 @@ class Script {
    */
   createEndboss(xPosition) {
     world.level.endboss.push(new Endboss(xPosition));
-    world.collision.rectangleEndboss = world.level.endboss.map((enemy) => new RectangleEnemy(enemy));
+    world.collision.rectangleEndboss = world.level.endboss.map((enemy) => new RectangleEnboss(enemy));
     this.endboss = world.level.endboss[0];
   }
 
@@ -122,14 +122,21 @@ class Script {
   }
 
   /**
-   * This function creates a new bottle which the player can pick up.
+   * This function creates a new bottle which the player can pick up. The do - while loop ensures that the bottle is not spawned directly on the player.
    *
    * @param {number} amountOfBottles - The maximum amount of bottles that are created.
    */
   createNewBottles(amountOfBottles) {
+    const playerX = world.character.x;
+    const playerWidth = 140; // Assuming the player sprite is 140px wide
+
     for (let i = 0; i < amountOfBottles; i++) {
       if (world.level.bottles.length + world.character.bottlesCollected <= 3) {
-        const xPosition = this.getRandomPositionBottle();
+        let xPosition;
+        do {
+          xPosition = this.getRandomPositionBottle();
+        } while (xPosition >= playerX && xPosition <= playerX + playerWidth);
+
         world.level.bottles.push(new Bottle(xPosition));
         world.collision.rectanglesBottles = world.level.bottles.map((bottle) => new RectangleBottle(bottle));
       }
@@ -174,7 +181,7 @@ class Script {
 
   /**
    *This function sets a stoppable timeout. It stores the id so it can be cleared. This is neede in the last endboss fight, because the fight should stop immediately.
-   * 
+   *
    * @param {function} func - The function that needs to be executed.
    * @param {number} duration - Time after which the execution ends.
    */

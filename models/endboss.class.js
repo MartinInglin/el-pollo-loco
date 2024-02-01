@@ -4,7 +4,7 @@ class Endboss extends MovableObject {
   y = 170;
   speed = 10;
   adjustmentSprite = 0;
-  health = 20;
+  health = 100;
   imagesWalking = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
     "img/4_enemie_boss_chicken/1_walk/G2.png",

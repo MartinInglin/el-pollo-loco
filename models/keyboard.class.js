@@ -14,6 +14,8 @@ class Keyboard {
     document.addEventListener("keyup", (event) => {
       this.handleKeyUp(event.key);
     });
+
+    this.handleTouchEvents();
   }
 
   /**
@@ -64,4 +66,40 @@ class Keyboard {
         break;
     }
   }
+
+  handleTouchEvents() {
+    document.getElementById('touchButtonLeft').addEventListener("touchstart", () => {
+      this.LEFT = true;
+    });
+  
+    document.getElementById('touchButtonLeft').addEventListener("touchend", () => {
+      this.LEFT = false;
+    });
+  
+    document.getElementById('touchButtonRight').addEventListener("touchstart", () => {
+      this.RIGHT = true;
+    });
+  
+    document.getElementById('touchButtonRight').addEventListener("touchend", () => {
+      this.RIGHT = false;
+    });
+
+    document.getElementById('touchButtonJump').addEventListener("touchstart", () => {
+      this.UP = true;
+    });
+  
+    document.getElementById('touchButtonJump').addEventListener("touchend", () => {
+      this.UP = false;
+    });
+  
+    document.getElementById('touchButtonThrowBottle').addEventListener("touchstart", () => {
+      this.SPACE = true;
+    });
+  
+    document.getElementById('touchButtonThrowBottle').addEventListener("touchend", () => {
+      this.SPACE = false;
+    });
+  }
+  
+
 }

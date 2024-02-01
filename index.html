@@ -1,16 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>El Pollo Loco</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
-</head>
-<body>
-    <h1>El Pollo Loco</h1>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
+  </head>
+  <body>
+    <div class="imageStartScreen">
+      <img src="img/9_intro_outro_screens/start/startscreen_2.png" alt="" />
+      <button id="startButton" type="button" class="btn btn-warning startButton" onclick="startGame()">
+        Start Game
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary settingsButton"
+        data-bs-toggle="modal"
+        data-bs-target="#modalSettings"
+      >
+        <img src="img/icons/settings.svg" alt="" />
+      </button>
+      <button
+        id="storyButton"
+        type="button"
+        class="btn btn-warning storyButton"
+        data-bs-toggle="modal"
+        data-bs-target="#modalStory"
+      >
+        My story
+      </button>
+    </div>
 
-    <button id="startButton"><a href="game.html">Start Game</a></button>
+    <!-- Modal Settings -->
+    <div
+      class="modal fade"
+      id="modalSettings"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="modalSettings"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Settings</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Controls</h3>
+            <div class="container text-center">
+              <div class="row">
+                <div class="col">Move forward</div>
+                <div class="col">Arrow right</div>
+              </div>
+              <div class="row">
+                <div class="col">Move backward</div>
+                <div class="col">Arrow left</div>
+              </div>
+              <div class="row">
+                <div class="col">Jump</div>
+                <div class="col">Arrow up</div>
+              </div>
+              <div class="row">
+                <div class="col">Throw a bottle</div>
+                <div class="col">Space</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Music</h3>
+            <div class="container text-center" onclick="toggleImage()">
+              <div class="row">
+                <div class="col">Don't like the music?</div>
+                <div class="col">
+                  <img id="volumeImage" src="img/icons/volume.svg" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Got it, let's play!</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-</body>
+    <!-- Modal Story -->
+    <div
+      class="modal fade"
+      id="modalStory"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="modalStory"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Story</h1>
+          </div>
+          <div class="modal-body">
+            <p>
+              Hello, my name is Luis Pepe Ignacio Vicente. My friends call me Pepe. I like chicken for the sake of my
+              life, and I'm not just talking about the tasty grilled kind. <br>Not long time ago there was a legendary
+              chicken that has become the talk of the town - <b>Cluckzilla!!!</b><br>The moment I heard about Cluckzilla, my eyes
+              widened, and a surge of excitement coursed through my veins. I knew right then that I had to embark on a
+              quest to find and conquer this legendary hen. After all, what could be more thrilling for a chicken
+              enthusiast like me than the ultimate chicken challenge? <br>So I started my journey…
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

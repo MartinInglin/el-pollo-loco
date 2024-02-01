@@ -7,7 +7,6 @@ class World {
   level = new Level(level1);
   collision = new Collision();
   statusbars = [new StatusbarHealthCharacter(), new StatusbarCoins(), new StatusbarBottles()];
-  endScreens = [];
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -26,7 +25,7 @@ class World {
     this.addObjectsToMap(this.level.backgroundObjects);
 
     this.addToMap(this.character);
-    
+
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.endboss);
@@ -45,7 +44,7 @@ class World {
 
     this.addStatusbarsToMap(this.statusbars);
 
-    this.addObjectsToMap(this.endScreens)
+    //this.addObjectsToMap(this.endScreens)
 
     let self = this;
     requestAnimationFrame(() => {
@@ -141,7 +140,7 @@ class World {
     this.ctx.beginPath();
     this.ctx.rect(rectangleCollision.x, rectangleCollision.y, rectangleCollision.width, rectangleCollision.height);
     this.ctx.lineWidth = 0;
-    this.ctx.strokeStyle = "blue";
+    this.ctx.strokeStyle = "transparent";
     this.ctx.stroke();
     this.ctx.closePath();
   }

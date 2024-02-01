@@ -21,9 +21,9 @@ class Level {
     this.backgroundObjects = actualLevel.backgroundObjects;
     this.backgroundReproductionCountX = actualLevel.backgroundReproductionCountX;
     this.backgroundImagePaths = actualLevel.backgroundImagePaths;
-    this.levelEnd = this.backgroundReproductionCountX * 720;
+    this.levelEnd = this.backgroundReproductionCountX * 719;
     this.loadBackgroundImages();
-    this.script = new ScriptLevel1();
+    this.script = actualLevel.script;
   }
 
   /**

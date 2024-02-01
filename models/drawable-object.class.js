@@ -28,4 +28,9 @@ class DrawableObject {
       this.imageCache[path] = img;
     });
   }
+
+  loadAudio(path) {
+    this.audio = new Audio();
+    this.audio.src = path;
+  }
 }

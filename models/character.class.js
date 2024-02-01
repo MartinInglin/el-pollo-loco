@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-  x = 6600; //Reset to 100 after Endboss programmed
+  x = 100;
   y = 250;
   height = 200;
   width = 140;
@@ -134,6 +134,7 @@ class Character extends MovableObject {
       this.animationDie();
       this.endLevelReached(20);
       this.checkThrowBottle();
+      this.showModalGameOver();
       this.previousBottlesCount = world.level.throwableBottles.length;
     });
   }
@@ -142,43 +143,47 @@ class Character extends MovableObject {
    * This function applies gravity to the character. It is needed separatedly because other objects like bottles need different values so it looks natural.
    */
   applyGravityCharacter() {
-    this.setStoppableInterval(this.applyGravity, 40)
+    this.setStoppableInterval(this.applyGravity, 40);
   }
 
   /**
    * This function moves the camera with the character and stops moving at the end of the level. It needs to be in sync with the function moveCharacter and the interval must be the same. Otherwise the character will flicker. The string in the end is used to store the interval individually so it can be stopped sparatedly.
    */
   moveCamera() {
-    this.setStoppableInterval(() => {
+    this.setStoppableInterval(
+      () => {
         if (this.x <= 300) {
-            world.camera_x = 0;
+          world.camera_x = 0;
         }
         if (this.x > 300 && this.x < world.level.levelEnd - 420) {
-            world.camera_x = 300 - this.x;
+          world.camera_x = 300 - this.x;
         }
-    }, 40, "cameraMoveInterval");
-}
+      },
+      40,
+      "cameraMoveInterval"
+    );
+  }
 
   /**
    * This function moves the character. It is checks frequently if the player presses left, right or up on the keyboard by checking the corresponding variables form the keyboard. It must be in sync with the "moveCamera" function.
    */
   moveCharacter() {
     this.setStoppableInterval(() => {
-        if (this.keyboard.LEFT && !this.endLevelLeftReached) {
-            this.moveLeft();
-            this.characterMovedLeft = true;
-            this.characterMovedRight = false;
-        }
-        if (this.keyboard.RIGHT && !this.endLevelRightReached) {
-            this.moveRight();
-            this.characterMovedLeft = false;
-            this.characterMovedRight = true;
-        }
-        if (!this.keyboard.LEFT && !this.keyboard.RIGHT && this.speedX >= 0) {
-            this.stopCharacter();
-        }
+      if (this.keyboard.LEFT && !this.endLevelLeftReached) {
+        this.moveLeft();
+        this.characterMovedLeft = true;
+        this.characterMovedRight = false;
+      }
+      if (this.keyboard.RIGHT && !this.endLevelRightReached) {
+        this.moveRight();
+        this.characterMovedLeft = false;
+        this.characterMovedRight = true;
+      }
+      if (!this.keyboard.LEFT && !this.keyboard.RIGHT && this.speedX >= 0) {
+        this.stopCharacter();
+      }
     }, 40);
-}
+  }
 
   /**
    * This function is called after the player releases the left or right button. The character slides for a little longer. Therefore the two variables characterMovedLeft and -Right are used to see if the character hase moved before. If the charater is at the level end the function is not called.
@@ -478,23 +483,27 @@ class Character extends MovableObject {
    * This function plays the animation if the character dies.
    */
   animationDie() {
-    setInterval(() => {
+    let id = setInterval(() => {
       if (this.health <= 0) {
         this.playSingleRunAnimation(this.imagesDie, "die");
-        this.showModalGameOver();
       }
     }, 100);
-
   }
 
   /**
    * This function shows the "game over" screen 2 seconds after the character has died. The modal is located in game.html.
    */
   showModalGameOver() {
-    setTimeout(() => {
-      const modalGameOver = new bootstrap.Modal(document.getElementById("staticBackdropGameOver"));
-      modalGameOver.show();
-    }, 2000);
+    let id = setInterval(() => {
+      if (this.health <= 0) {
+        clearInterval(id);
+        setTimeout(() => {
+          const modalGameOver = new bootstrap.Modal(document.getElementById("staticBackdropGameOver"));
+          modalGameOver.show();
+
+        }, 2000);
+      }
+    }, 500);
   }
 
   /**
@@ -519,8 +528,8 @@ class Character extends MovableObject {
   }
 
   /**
-   * This function checks if the player can throw a bottle. Therefore he needs to press the space button, have a bottle and there must be no bottle already thrown. 
-   * 
+   * This function checks if the player can throw a bottle. Therefore he needs to press the space button, have a bottle and there must be no bottle already thrown.
+   *
    * @param {boolean} bottleThrown - Contains if a bottle has been thrown.
    * @returns - boolean
    */
@@ -530,7 +539,7 @@ class Character extends MovableObject {
 
   /**
    * This function checks if the collected bottles and previous bottles are the same. This happens if the thrown bottle is destroyed. Then it resets the previous bottles count.
-   * 
+   *
    * @returns - boolean
    */
   bottleIsThrown() {

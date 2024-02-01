@@ -21,4 +21,5 @@ const level1 = {
       "img/5_background/layers/1_first_layer/2.png",
     ],
   ],
+  script: new ScriptLevel1(),
 };
