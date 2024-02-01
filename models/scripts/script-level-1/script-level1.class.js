@@ -190,24 +190,6 @@ class ScriptLevel1 extends Script {
   }
 
   /**
-   * This function checks if the character is dead.
-   * 
-   * @returns - boolean
-   */
-  characterDead() {
-    return world.character.health <= 0;
-  }
-
-  /**
-   * This function checks if the endboss' health is 0.
-   * 
-   * @returns - boolean 
-   */
-  endbossDefeated() {
-    return this.endboss.health <= 0;
-  }
-
-  /**
    * This function executes the jumping animation. It turns the endboss around if he is outside the canvas and creates new bottles after every run through.
    */
   continueJumping() {
@@ -268,7 +250,7 @@ class ScriptLevel1 extends Script {
    * This function lets the endboss fly up in the sky.
    */
   sequenceFlyAttack() {
-    this.endbossAttackAnimation();
+    this.endbossFlyAnimation();
     this.startFlying();
   }
 
@@ -302,15 +284,15 @@ class ScriptLevel1 extends Script {
   startFlyingAttack() {
     const elapsedTimeObj = { value: 0 };
 
-    const intervalId = setInterval(() => {
+    const id = setInterval(() => {
       this.deleteChickenNotOnCanvas();
 
       if (this.characterDead()) {
-        clearInterval(intervalId);
+        clearInterval(id);
       }
 
       if (this.endbossDefeated()) {
-        clearInterval(intervalId);
+        clearInterval(id);
         this.launchShootingSequence();
       }
 
@@ -357,7 +339,7 @@ class ScriptLevel1 extends Script {
    * This function calls the hurt animation. Then it moves the endboss out.
    */
   launchShootingSequence() {
-    this.stopAnimationAttack();
+    //this.stopAnimationAttack();
     this.resetEndbossHurtAnimation();
     this.sequenceEndbossHurt();
     setTimeout(() => {

@@ -3,10 +3,13 @@ class Coin extends MovableObject {
   x;
   height = 150;
   width = 150;
+  AUDIO_COIN_COLLECTED = new Audio("audio/coin.mp3");
 
   constructor(xPosition) {
     super().loadImage("img/8_coin/coin_1.png");
     this.x = xPosition;
+    this.AUDIO_COIN_COLLECTED.volume = 1;
+    this.coinCollectedAudioPlayed = false;
     this.coinCollected();
   }
 
@@ -14,12 +17,23 @@ class Coin extends MovableObject {
    * This function checks if the character has hit th coin. If so it deletes the coin.
    */
   coinCollected() {
+
+
     this.setStoppableInterval(() => {
       if (this.health === 0) {
+        this.playCoinAudio();
         this.coinDisappersAnimation();
         this.deleteCoin();
       }
     }, 40);
+  }
+
+  playCoinAudio() {
+    if (!this.coinCollectedAudioPlayed) {
+      this.AUDIO_COIN_COLLECTED.play();
+      this.coinCollectedAudioPlayed = true;
+    }
+
   }
 
   /**

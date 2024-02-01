@@ -98,21 +98,6 @@ class MovableObject extends DrawableObject {
   }
 
   /**
-   * This function is called when the health-value of an enemy is 0. It stops its intervals and calls the animation for death.
-   */
-  enemyDies() {
-    this.setStoppableInterval(() => {
-      if (this.health === 0 || this.x < -100) {
-        this.stopIntervalsMovableObjects();
-        this.enemyDiesAnimation();
-        setTimeout(() => {
-          this.deleteEnemy();
-        }, 200);
-      }
-    }, 40);
-  }
-
-  /**
    * This function replaces the image of the enemy.
    */
   enemyDiesAnimation() {

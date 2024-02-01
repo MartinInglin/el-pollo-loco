@@ -3,7 +3,7 @@ class Script {
    * This function resets the health of the enboss to 100;
    */
   resetHealthEndboss() {
-    this.endboss.health = 100;
+    this.endboss.health = 20;
   }
 
   /**
@@ -48,6 +48,13 @@ class Script {
    */
   endbossAttackAnimation() {
     this.endboss.attackAnimation();
+  }
+
+  /**
+   * This function executes the flying animation of the endboss.
+   */
+  endbossFlyAnimation() {
+    this.endboss.flyAnimation();
   }
 
   /**
@@ -162,6 +169,24 @@ class Script {
         world.collision.destroyRectangle(enemy, "rectanglesEnemies");
       }
     });
+  }
+
+  /**
+   * This function checks if the character is dead.
+   *
+   * @returns - boolean
+   */
+  characterDead() {
+    return world.character.health <= 0;
+  }
+
+  /**
+   * This function checks if the endboss' health is 0.
+   *
+   * @returns - boolean
+   */
+  endbossDefeated() {
+    return this.endboss.health <= 0;
   }
 
   /**

@@ -4,19 +4,23 @@ class ChickenSmallFlying extends MovableObject {
   y = 200;
   x;
   speed = 10;
-  imageDead = [
-    "img/3_enemies_chicken/chicken_small/2_dead/dead.png",
-  ]
+  imageDead = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
+  AUDIO_DYING = new Audio("audio/chicken-hurt.mp3");
+  AUDIO_FLYING = new Audio("audio/chicken-flying-2.mp3");
 
   constructor(xPosition, yPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/2_w.png");
     this.loadImages(this.imageDead);
     this.x = xPosition;
     this.y = yPosition;
+    this.AUDIO_DYING.volume = 1;
+    this.AUDIO_FLYING.volume = 1;
 
     checkWorldExistence().then(() => {
-    this.startMovingTowardsCharacter();
-    this.enemyDies()
+      this.checkObjectOnCanvas();
+      this.startMovingTowardsCharacter();
+      this.enemyDies();
+      this.AUDIO_FLYING.play();
     });
   }
 
@@ -25,7 +29,71 @@ class ChickenSmallFlying extends MovableObject {
    */
   startMovingTowardsCharacter() {
     this.setStoppableInterval(() => {
-      this.moveLeft()
+      this.moveLeft();
+      this.muteAudioDying();
     }, 30);
+  }
+
+  muteAudioDying() {
+    setTimeout(() => {
+      this.AUDIO_DYING.volume = 0;
+    }, 2000);
+  }
+
+  /**
+   * This function is called when the health-value of an enemy is 0. It stops its intervals and calls the animation for death.
+   */
+  enemyDies() {
+    this.setStoppableInterval(() => {
+      if (this.health === 0 || this.x < -100) {
+        this.stopIntervalsMovableObjects();
+        this.enemyDiesAnimation();
+        this.playAudioDying();
+        setTimeout(() => {
+          this.deleteEnemy();
+        }, 200);
+      }
+    }, 40);
+  }
+
+  playAudioDying() {
+    this.AUDIO_DYING.play();
+  }
+
+  /**
+   * This function is just for the sound. It checks, if the chicken is visible on the canvas and if the character is alive, then it plays the sound.
+   */
+  checkObjectOnCanvas() {
+    let id = setInterval(() => {
+      if (this.isChickenOnCanvas() && world.character.health > 0) {
+        this.AUDIO_FLYING.loop = true;
+      } else {
+        clearInterval(id);
+        this.fadeOutAudioFlying();
+      }
+    }, 1000);
+  }
+
+  /**
+   * This function creates a fade out when the flying chicken leaves the canvas. If you wonder about the "0.000001", this is due to the floating point calculation of javascript because the volume never hits 0.
+   */
+  fadeOutAudioFlying() {
+    let id = setInterval(() => {
+      this.AUDIO_FLYING.volume -= 0.1;
+      if (this.AUDIO_FLYING.volume <= 0.000001) {
+        clearInterval(id);
+      }
+    }, 100);
+  }
+
+  /**
+   * This function checks if a chicken is on the canvas.
+   *
+   * @returns - boolean
+   */
+  isChickenOnCanvas() {
+    const canvasLeftBoundary = world.camera_x * -1;
+    const canvasRightBoundary = canvasLeftBoundary + 720;
+    return this.x >= canvasLeftBoundary && this.x <= canvasRightBoundary;
   }
 }

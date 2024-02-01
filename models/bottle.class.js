@@ -3,6 +3,7 @@ class Bottle extends MovableObject {
   x;
   height = 80;
   width = 80;
+  AUDIO_PICK_UP_BOTTLE = new Audio("audio/pick-up-bottles.mp3");
 
   constructor(xPosition) {
     super().loadImage("img/6_salsa_bottle/2_salsa_bottle_on_ground.png");
@@ -10,6 +11,7 @@ class Bottle extends MovableObject {
 
     checkWorldExistence().then(() => {
       this.bottleCollected();
+      this.AUDIO_PICK_UP_BOTTLE.volume = 1;
     });
   }
 
@@ -19,6 +21,7 @@ class Bottle extends MovableObject {
   bottleCollected() {
     this.setStoppableInterval(() => {
       if (this.health === 0) {
+        this.AUDIO_PICK_UP_BOTTLE.play();
         this.deleteBottle();
       }
     }, 40);

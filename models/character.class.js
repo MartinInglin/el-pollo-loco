@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-  x = 100;
+  x = 6600;
   y = 250;
   height = 200;
   width = 140;
@@ -94,6 +94,10 @@ class Character extends MovableObject {
   ];
   AUDIO_WALKING = new Audio("audio/quick-run-cartoony.mp3");
   AUDIO_JUMP = new Audio("audio/jumps-on-the-floor.mp3");
+  AUDIO_THROW = new Audio("audio/throw-bottle.mp3");
+  AUDIO_HURT = new Audio("audio/hurt.mp3");
+  AUDIO_DIE = new Audio("audio/character-dies.mp3");
+
   speed = 10;
   keyboard;
   jumpAnimationStarted = false;
@@ -102,6 +106,7 @@ class Character extends MovableObject {
   endLevelLeftReached = false;
   endLevelRightReached = false;
   characterSleep = false;
+  audioDiePlayed = false;
   iterationCountIdleAnimation = 0;
   isHurt = false;
   idWalkAnimation;
@@ -121,6 +126,12 @@ class Character extends MovableObject {
     this.loadImages(this.imagesIdleLong);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDie);
+
+    this.AUDIO_WALKING.volume = 0.2;
+    this.AUDIO_JUMP.volume = 1;
+    this.AUDIO_THROW.volume = 1;
+    this.AUDIO_HURT.volume = 1;
+    this.AUDIO_DIE.volume = 1;
 
     checkWorldExistence().then(() => {
       this.applyGravityCharacter();
@@ -229,7 +240,6 @@ class Character extends MovableObject {
    */
   startAnimationWalking() {
     this.AUDIO_WALKING.loop = true;
-    this.AUDIO_WALKING.volume = 0.2;
     this.AUDIO_WALKING.play();
     this.playContinuousAnimation(this.imagesWalking, "walking");
   }
@@ -436,6 +446,7 @@ class Character extends MovableObject {
     this.setStoppableInterval(() => {
       if (this.healthCharacterDecreases()) {
         this.isHurt = true;
+        this.AUDIO_HURT.play();
         this.startHurtAnimation();
       }
     }, 100);
@@ -485,9 +496,18 @@ class Character extends MovableObject {
   animationDie() {
     let id = setInterval(() => {
       if (this.health <= 0) {
+        this.playAudioDie();
         this.playSingleRunAnimation(this.imagesDie, "die");
       }
     }, 100);
+  }
+
+  playAudioDie() {
+    if (!this.audioDiePlayed) {
+      this.AUDIO_DIE.play();
+      this.audioDiePlayed = true;
+    }
+
   }
 
   /**
@@ -518,6 +538,7 @@ class Character extends MovableObject {
       if (this.playerCanThrowBottle(bottleThrown)) {
         bottleThrown = true;
         world.level.throwableBottles[0].throwBottle();
+        this.AUDIO_THROW.play();
         this.previousBottlesCount -= 1;
       }
       if (this.bottleIsThrown()) {

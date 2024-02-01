@@ -50,7 +50,7 @@ class Collision {
         world.character.miniJump();
       } else if (this.isCollidingObject(characterRect, enemy)) {
         this.characterIsHurt();
-        this.characterIsDead();
+
       }
     });
   }
@@ -61,7 +61,6 @@ class Collision {
     this.rectangleEndboss.forEach((enemy) => {
       if (this.isCollidingObject(characterRect, enemy)) {
         this.characterIsHurt();
-        this.characterIsDead();
         return;
       }
     });
@@ -78,6 +77,7 @@ class Collision {
 
       this.hurtTimeout = setTimeout(() => {
         this.collisionDetected = false;
+        this.characterIsDead();
       }, 1000);
     }
   }

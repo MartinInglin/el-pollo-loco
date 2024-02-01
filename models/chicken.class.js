@@ -4,9 +4,7 @@ class Chicken extends MovableObject {
     "img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
     "img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
   ];
-  imageDead = [
-    "img/3_enemies_chicken/chicken_normal/2_dead/dead.png",
-  ]
+  imageDead = ["img/3_enemies_chicken/chicken_normal/2_dead/dead.png"];
 
   y = 370;
   x;
@@ -14,6 +12,8 @@ class Chicken extends MovableObject {
   width = 80;
   adjustmentSprite = 0;
   AUDIO_WALKING = new Audio("audio/chicken-cackling.mp3");
+  AUDIO_IS_HIT = new Audio("audio/character-hit-enemy.mp3");
+  AUDIO_CHICKEN_DROPPED  = new Audio("audio/chicken-dropped.mp3");
 
   constructor(xPosition, yPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
@@ -21,30 +21,33 @@ class Chicken extends MovableObject {
     this.loadImages(this.imageDead);
 
     this.x = xPosition;
-    this.y = yPosition
+    this.y = yPosition;
     this.speed = 0.4;
+    this.AUDIO_WALKING.volume = 0.2;
+    this.AUDIO_IS_HIT.volume = 1;
 
     checkWorldExistence().then(() => {
-    this.checkObjectOnCanvas();
-    this.chickenMoveLeft();
-    this.chickenWalkingAnimation();
-    this.enemyDies()
-    this.applyGravityChicken();
-  });
+      this.checkObjectOnCanvas();
+      this.chickenMoveLeft();
+      this.chickenWalkingAnimation();
+      this.enemyDies();
+      this.applyGravityChicken();
+      this.playAudioDropped();
+    });
   }
 
   /**
    * This function applies gravity to chicken. It is especially needed in the endgame where the endboss throws the chicken down.
    */
   applyGravityChicken() {
-    this.setStoppableInterval(this.applyGravity, 40)
+    this.setStoppableInterval(this.applyGravity, 40);
   }
 
   /**
    * This function sets an interval to move the chicken to the left.
    */
   chickenMoveLeft() {
-    this.setStoppableInterval(this.moveLeft, 10)
+    this.setStoppableInterval(this.moveLeft, 10);
   }
 
   /**
@@ -52,24 +55,51 @@ class Chicken extends MovableObject {
    */
   chickenWalkingAnimation() {
     this.setStoppableInterval(() => {
-      this.playContinuousAnimation(this.imagesWalking, "chickenWalking")
+      this.playContinuousAnimation(this.imagesWalking, "chickenWalking");
     }, 100);
   }
 
   /**
-   * This function is just for the sound. It checks, if the chicken is visible on the canvas and then plays the sound.
+   * This function is just for the sound. It checks, if the chicken is visible on the canvas and if the character is alive, then it plays the sound.
    */
   checkObjectOnCanvas() {
     this.setStoppableInterval(() => {
-      const canvasLeftBoundary = world.camera_x * -1;
-      const canvasRightBoundary = canvasLeftBoundary + 720;
-
-      if (this.x >= canvasLeftBoundary && this.x <= canvasRightBoundary) {
+      if (this.isChickenOnCanvas() && world.character.health > 0) {
         this.playAudioWalking();
+        this.AUDIO_IS_HIT.volume = 1;
       } else {
         this.stopAudioWalking();
+        this.AUDIO_IS_HIT.volume = 0;
       }
     }, 1000);
+  }
+
+  /**
+   * This function checks if a chicken is on the canvas.
+   * 
+   * @returns - boolean
+   */
+  isChickenOnCanvas() {
+    const canvasLeftBoundary = world.camera_x * -1;
+    const canvasRightBoundary = canvasLeftBoundary + 720;
+    return this.x >= canvasLeftBoundary && this.x <= canvasRightBoundary;
+  }
+
+  /**
+   * This function is called when the health-value of an enemy is 0. It stops its intervals and calls the animation for death.
+   */
+  enemyDies() {
+    this.setStoppableInterval(() => {
+      if (this.health === 0 || this.x < -100) {
+        this.stopIntervalsMovableObjects();
+        this.enemyDiesAnimation();
+        this.stopAudioWalking();
+        this.playAudioDying();
+        setTimeout(() => {
+          this.deleteEnemy();
+        }, 200);
+      }
+    }, 40);
   }
 
   /**
@@ -77,8 +107,17 @@ class Chicken extends MovableObject {
    */
   playAudioWalking() {
     this.AUDIO_WALKING.loop = true;
-    this.AUDIO_WALKING.volume = 0.2;
     this.AUDIO_WALKING.play();
+  }
+
+  playAudioDropped() {
+    if (this.y < 110) {
+      this.AUDIO_CHICKEN_DROPPED.play();
+    }
+  }
+
+  playAudioDying() {
+    this.AUDIO_IS_HIT.play();
   }
 
   /**

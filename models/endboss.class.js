@@ -4,7 +4,7 @@ class Endboss extends MovableObject {
   y = 170;
   speed = 10;
   adjustmentSprite = 0;
-  health = 100;
+  health = 20;
   imagesWalking = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
     "img/4_enemie_boss_chicken/1_walk/G2.png",
@@ -50,7 +50,9 @@ class Endboss extends MovableObject {
     "img/4_enemie_boss_chicken/5_dead/G25.png",
     "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
-  AUDIO_WALKING = new Audio("audio/quick-run-cartoony.mp3");
+  AUDIO_FLYING = new Audio("audio/endboss-flying.mp3");
+  AUDIO_ANGRY = new Audio("audio/bwack.mp3");
+  AUDIO_HURT = new Audio("audio/endboss-hurt.mp3");
 
   constructor(xPosition) {
     super().loadImage(this.imagesWalking[0]);
@@ -60,7 +62,12 @@ class Endboss extends MovableObject {
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDead);
 
+    this.AUDIO_FLYING.volume = 1;
+    this.AUDIO_ANGRY.volume = 1;
+
     this.x = xPosition;
+    this.audioAngryPlayed = false;
+    this.audioFlyingPlayed = false;
 
     this.applyGravityEndboss();
   }
@@ -84,6 +91,14 @@ class Endboss extends MovableObject {
    */
   alertAnimation() {
     this.playSingleRunAnimation(this.imagesAlert, "alert");
+    this.playAudioAngry();
+  }
+
+  playAudioAngry() {
+    if (!this.audioAngryPlayed) {
+      this.AUDIO_ANGRY.play();
+      this.audioAngryPlayed = true;
+    }
   }
 
   /**
@@ -99,11 +114,23 @@ class Endboss extends MovableObject {
     );
   }
 
+  flyAnimation() {
+    this.setStoppableInterval(() => {
+      this.playContinuousAnimation(this.imagesAttack, "attack");
+      this.continuousPlayAudioFlying();
+    }, 200);
+  }
+
   /**
    * This function calls the hurt animation.
    */
   hurtAnimation() {
     this.playSingleRunAnimation(this.imagesHurt, "hurt");
+    this.playAudioHurt();
+  }
+
+  playAudioHurt() {
+    this.AUDIO_HURT.play();
   }
 
   /**
@@ -118,5 +145,25 @@ class Endboss extends MovableObject {
    */
   jump() {
     this.speedY = 35;
+    this.playAudioFlying();
+  }
+
+  playAudioFlying() {
+    this.AUDIO_FLYING.pause();
+    this.AUDIO_FLYING.currentTime = 0;
+    this.AUDIO_FLYING.play();
+  }
+
+  continuousPlayAudioFlying() {
+    if (!this.audioFlyingPlayed) {
+      this.AUDIO_FLYING.loop = true;
+      this.AUDIO_FLYING.play();
+      this.audioFlyingPlayed = true;
+    }
+    setTimeout(() => {
+      if (this.health == 0) {
+        this.AUDIO_FLYING.pause();
+      }
+    }, 3000);
   }
 }

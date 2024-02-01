@@ -26,11 +26,15 @@ class BottleThrowable extends MovableObject {
   acceleration = 2;
   adjustmentSprite = 30;
   bottleHitsEnemy = false;
+  AUDIO_BOTTLE_FLYING = new Audio("audio/bottle-flying.mp3");
+  AUDIO_BOTTLE_SPLASH = new Audio("audio/bottle-splash.mp3");
 
   constructor() {
     super().loadImage("img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png");
     this.loadImages(this.imagesRotation);
     this.loadImages(this.imagesSplash);
+    this.AUDIO_BOTTLE_FLYING.volume = 1;
+    this.AUDIO_BOTTLE_SPLASH.volume = 1;
 
     checkWorldExistence().then(() => {});
   }
@@ -53,7 +57,7 @@ class BottleThrowable extends MovableObject {
 
   /**
    * This function moves the bottle to left or right depending on the direction the player has when he throws the bottle.
-   * 
+   *
    * @param {boolean} bottleThrownRight - This is the same as "world.character.otherDirection" but needs to be stored here because the bottle should not change its direction when the player turns around.
    */
   moveBottle(bottleThrownRight) {
@@ -84,6 +88,7 @@ class BottleThrowable extends MovableObject {
    */
   throwBottleAnimation() {
     this.playContinuousAnimation(this.imagesRotation, "bottleRotation");
+    this.AUDIO_BOTTLE_FLYING.play();
   }
 
   /**
@@ -104,10 +109,11 @@ class BottleThrowable extends MovableObject {
    * This function calls the splash animation in case the bottle is destroyed.
    */
   playSplashAnimation() {
-    let id = setInterval(() => {
+    this.setStoppableInterval(() => {
       this.playSingleRunAnimation(this.imagesSplash, "bottleSplash");
+      this.stopAudioFlyingBottle();
+      this.AUDIO_BOTTLE_SPLASH.play();
     }, 100);
-    this.intervalIdsMovableObjects.push(id);
   }
 
   /**
@@ -119,4 +125,12 @@ class BottleThrowable extends MovableObject {
       world.level.throwableBottles.splice(index, 1);
     }
   }
+
+    /**
+   * This function stops the audio of the flying bottle.
+   */
+    stopAudioFlyingBottle() {
+      this.AUDIO_BOTTLE_FLYING.pause();
+      this.AUDIO_BOTTLE_FLYING.currentTime = 0;
+    }
 }
