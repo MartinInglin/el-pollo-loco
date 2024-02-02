@@ -13,7 +13,7 @@ class Chicken extends MovableObject {
   adjustmentSprite = 0;
   AUDIO_WALKING = new Audio("audio/chicken-cackling.mp3");
   AUDIO_IS_HIT = new Audio("audio/character-hit-enemy.mp3");
-  AUDIO_CHICKEN_DROPPED  = new Audio("audio/chicken-dropped.mp3");
+  AUDIO_CHICKEN_DROPPED = new Audio("audio/chicken-dropped.mp3");
 
   constructor(xPosition, yPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
@@ -23,8 +23,6 @@ class Chicken extends MovableObject {
     this.x = xPosition;
     this.y = yPosition;
     this.speed = 0.4;
-    this.AUDIO_WALKING.volume = 0.2;
-    this.AUDIO_IS_HIT.volume = 1;
 
     checkWorldExistence().then(() => {
       this.checkObjectOnCanvas();
@@ -76,7 +74,7 @@ class Chicken extends MovableObject {
 
   /**
    * This function checks if a chicken is on the canvas.
-   * 
+   *
    * @returns - boolean
    */
   isChickenOnCanvas() {
@@ -94,7 +92,9 @@ class Chicken extends MovableObject {
         this.stopIntervalsMovableObjects();
         this.enemyDiesAnimation();
         this.stopAudioWalking();
-        this.playAudioDying();
+        if (this.x > 0) {
+          this.playAudioDying();
+        }
         setTimeout(() => {
           this.deleteEnemy();
         }, 200);
@@ -110,12 +110,18 @@ class Chicken extends MovableObject {
     this.AUDIO_WALKING.play();
   }
 
+  /**
+   * This function plays the audio when a chicken is dropped by the endboss. In fact it always plays if the chicken is above 110 on the y axis.
+   */
   playAudioDropped() {
     if (this.y < 110) {
       this.AUDIO_CHICKEN_DROPPED.play();
     }
   }
 
+  /**
+   * This function plays the audio "hit" when a chicken dies.
+   */
   playAudioDying() {
     this.AUDIO_IS_HIT.play();
   }

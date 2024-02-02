@@ -11,10 +11,9 @@ class ChickenSmallFlying extends MovableObject {
   constructor(xPosition, yPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/2_w.png");
     this.loadImages(this.imageDead);
+
     this.x = xPosition;
     this.y = yPosition;
-    this.AUDIO_DYING.volume = 1;
-    this.AUDIO_FLYING.volume = 1;
 
     checkWorldExistence().then(() => {
       this.checkObjectOnCanvas();
@@ -30,14 +29,7 @@ class ChickenSmallFlying extends MovableObject {
   startMovingTowardsCharacter() {
     this.setStoppableInterval(() => {
       this.moveLeft();
-      this.muteAudioDying();
     }, 30);
-  }
-
-  muteAudioDying() {
-    setTimeout(() => {
-      this.AUDIO_DYING.volume = 0;
-    }, 2000);
   }
 
   /**
@@ -48,7 +40,10 @@ class ChickenSmallFlying extends MovableObject {
       if (this.health === 0 || this.x < -100) {
         this.stopIntervalsMovableObjects();
         this.enemyDiesAnimation();
-        this.playAudioDying();
+        this.stopAudioFlying();
+        if (this.x > 0) {
+          this.playAudioDying();
+        }
         setTimeout(() => {
           this.deleteEnemy();
         }, 200);
@@ -56,6 +51,16 @@ class ChickenSmallFlying extends MovableObject {
     }, 40);
   }
 
+  /**
+   * This function stops the flying audio.
+   */
+  stopAudioFlying() {
+    this.AUDIO_FLYING.pause();
+  }
+
+  /**
+   * This function stops the flying audio.
+   */
   playAudioDying() {
     this.AUDIO_DYING.play();
   }
@@ -69,21 +74,9 @@ class ChickenSmallFlying extends MovableObject {
         this.AUDIO_FLYING.loop = true;
       } else {
         clearInterval(id);
-        this.fadeOutAudioFlying();
+        this.AUDIO_FLYING.pause();
       }
     }, 1000);
-  }
-
-  /**
-   * This function creates a fade out when the flying chicken leaves the canvas. If you wonder about the "0.000001", this is due to the floating point calculation of javascript because the volume never hits 0.
-   */
-  fadeOutAudioFlying() {
-    let id = setInterval(() => {
-      this.AUDIO_FLYING.volume -= 0.1;
-      if (this.AUDIO_FLYING.volume <= 0.000001) {
-        clearInterval(id);
-      }
-    }, 100);
   }
 
   /**

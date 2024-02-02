@@ -33,8 +33,6 @@ class BottleThrowable extends MovableObject {
     super().loadImage("img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png");
     this.loadImages(this.imagesRotation);
     this.loadImages(this.imagesSplash);
-    this.AUDIO_BOTTLE_FLYING.volume = 1;
-    this.AUDIO_BOTTLE_SPLASH.volume = 1;
 
     checkWorldExistence().then(() => {});
   }
@@ -126,11 +124,11 @@ class BottleThrowable extends MovableObject {
     }
   }
 
-    /**
+  /**
    * This function stops the audio of the flying bottle.
    */
-    stopAudioFlyingBottle() {
-      this.AUDIO_BOTTLE_FLYING.pause();
-      this.AUDIO_BOTTLE_FLYING.currentTime = 0;
-    }
+  stopAudioFlyingBottle() {
+    this.AUDIO_BOTTLE_FLYING.pause();
+    this.AUDIO_BOTTLE_FLYING.currentTime = 0;
+  }
 }

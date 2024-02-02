@@ -6,7 +6,6 @@ class Keyboard {
   SPACE = false;
 
   constructor() {
-
     document.addEventListener("keydown", (event) => {
       this.handleKeyDown(event.key);
     });
@@ -20,7 +19,7 @@ class Keyboard {
 
   /**
    * This function handles the keydown events. It sets the corresponding variables to true. The objects can listen to these changes.
-   * 
+   *
    * @param {event} key - Key down
    */
   handleKeyDown(key) {
@@ -67,39 +66,31 @@ class Keyboard {
     }
   }
 
+  // Call handleTouchEvents for each touch event
   handleTouchEvents() {
-    document.getElementById('touchButtonLeft').addEventListener("touchstart", () => {
-      this.LEFT = true;
-    });
-  
-    document.getElementById('touchButtonLeft').addEventListener("touchend", () => {
-      this.LEFT = false;
-    });
-  
-    document.getElementById('touchButtonRight').addEventListener("touchstart", () => {
-      this.RIGHT = true;
-    });
-  
-    document.getElementById('touchButtonRight').addEventListener("touchend", () => {
-      this.RIGHT = false;
+    this.handleTouchEvent("LEFT", "touchButtonLeft", "touchButtonLeft");
+    this.handleTouchEvent("RIGHT", "touchButtonRight", "touchButtonRight");
+    this.handleTouchEvent("UP", "touchButtonJump", "touchButtonJump");
+    this.handleTouchEvent("SPACE", "touchButtonThrowBottle", "touchButtonThrowBottle");
+  }
+
+  /**
+   * This function handles the touch events when the player is on a mobile device.
+   *
+   * @param {string} key - Key corresponding to the touch event
+   * @param {string} startElementId - HTML element ID for touchstart
+   * @param {string} endElementId - HTML element ID for touchend
+   */
+  handleTouchEvent(key, startElementId, endElementId) {
+    const startElement = document.getElementById(startElementId);
+    const endElement = document.getElementById(endElementId);
+
+    startElement.addEventListener("touchstart", () => {
+      this[key] = true;
     });
 
-    document.getElementById('touchButtonJump').addEventListener("touchstart", () => {
-      this.UP = true;
-    });
-  
-    document.getElementById('touchButtonJump').addEventListener("touchend", () => {
-      this.UP = false;
-    });
-  
-    document.getElementById('touchButtonThrowBottle').addEventListener("touchstart", () => {
-      this.SPACE = true;
-    });
-  
-    document.getElementById('touchButtonThrowBottle').addEventListener("touchend", () => {
-      this.SPACE = false;
+    endElement.addEventListener("touchend", () => {
+      this[key] = false;
     });
   }
-  
-
 }

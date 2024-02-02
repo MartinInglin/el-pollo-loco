@@ -18,8 +18,8 @@ class ChickenSmall extends MovableObject {
     super().loadImage(this.imageResting[0]);
     this.loadImages(this.imagesWalking);
     this.loadImages(this.imageDead);
+
     this.x = xPosition;
-    this.AUDIO_DYING.volume = 1;
 
     checkWorldExistence().then(() => {
       this.startMovingTowardsCharacter();
@@ -38,7 +38,6 @@ class ChickenSmall extends MovableObject {
       if (distance < 200) {
         this.moveLeft();
         this.playContinuousAnimation(this.imagesWalking, "chickenSmallWalking");
-        this.muteAudioDying();
         if (!audioPlayed) {
           this.AUDIO_BWACK.play();
           audioPlayed = true;
@@ -47,29 +46,28 @@ class ChickenSmall extends MovableObject {
     }, 30);
   }
 
-  muteAudioDying() {
-    setTimeout(() => {
-      this.AUDIO_DYING.volume = 0;
-    }, 2000);
-  }
-
-    /**
+  /**
    * This function is called when the health-value of an enemy is 0. It stops its intervals and calls the animation for death.
    */
-    enemyDies() {
-      this.setStoppableInterval(() => {
-        if (this.health === 0 || this.x < -100) {
-          this.stopIntervalsMovableObjects();
-          this.enemyDiesAnimation();
+  enemyDies() {
+    this.setStoppableInterval(() => {
+      if (this.health === 0 || this.x < -100) {
+        this.stopIntervalsMovableObjects();
+        this.enemyDiesAnimation();
+        if (this.x > 0) {
           this.playAudioDying();
-          setTimeout(() => {
-            this.deleteEnemy();
-          }, 200);
         }
-      }, 40);
-    }
+        setTimeout(() => {
+          this.deleteEnemy();
+        }, 200);
+      }
+    }, 40);
+  }
 
-    playAudioDying() {
-      this.AUDIO_DYING.play();
-    }
+  /**
+   * This function plays the dying audio of the small chicken.
+   */
+  playAudioDying() {
+    this.AUDIO_DYING.play();
+  }
 }

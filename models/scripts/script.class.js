@@ -3,7 +3,7 @@ class Script {
    * This function resets the health of the enboss to 100;
    */
   resetHealthEndboss() {
-    this.endboss.health = 20;
+    this.endboss.health = 100;
   }
 
   /**
@@ -62,6 +62,10 @@ class Script {
    */
   endbossHurtAnimation() {
     this.endboss.hurtAnimation();
+  }
+
+  endbossShootingAnimation() {
+    this.endboss.shootAnimation();
   }
 
   /**

@@ -50,11 +50,13 @@ class Collision {
         world.character.miniJump();
       } else if (this.isCollidingObject(characterRect, enemy)) {
         this.characterIsHurt();
-
       }
     });
   }
 
+  /**
+   * This function checks if the character is colliding with the endboss. If so the character is hurt in any case.
+   */
   characterIsCollidingEndboss() {
     const characterRect = this.rectangleCharacter[0];
 
@@ -146,15 +148,17 @@ class Collision {
     }
   }
 
+  /**
+   * This function checks if the endboss is colliding with a thrown bottle. If so it subtracts 20 from the health of the character.
+   */
   enbossIsCollidingBottle() {
     if (this.rectanglesBottlesThrowable.length > 0) {
       const bottleRect = this.rectanglesBottlesThrowable[0];
-      this.rectangleEndboss.forEach((enemy) => {
-        if (this.isCollidingObject(bottleRect, enemy)) {
+      this.rectangleEndboss.forEach((endboss) => {
+        if (this.isCollidingObject(bottleRect, endboss)) {
           world.level.throwableBottles[0].bottleHitsEnemy = true;
           this.destroyRectangle(bottleRect, "rectanglesBottlesThrowable");
-          enemy.enemy.health -= 20;
-          this.destroyRectangle(enemy, "rectanglesEnemies");
+          endboss.enemy.health -= 20;
         }
       });
     }
@@ -175,7 +179,6 @@ class Collision {
 
   /**
    * This function checks if an object is above the ground.
-   *
    *
    * @param {object} object - Contains the object which is checked.
    * @returns - boolean

@@ -1,6 +1,8 @@
 let canvas;
 let world;
 let fullscreenOn = false;
+let userVisitedPage = true;
+let isMuted = false;
 
 /**
  * This function initializes the world. It is executed when game.html is loaded.
@@ -8,18 +10,6 @@ let fullscreenOn = false;
 function init() {
   canvas = document.getElementById("canvas");
   world = new World(canvas);
-  //dectectMobileDevice();
-  //redirectOnRefreseh();
-}
-
-/**
- * This function leads the player to the index.html in case he refreshes the page.
- */
-function redirectOnRefreseh() {
-  const navigationEntries = performance.getEntriesByType("navigation");
-  if (navigationEntries.length > 0 && navigationEntries[0].type === "reload") {
-    window.location.href = "index.html";
-  }
 }
 
 /**
@@ -46,10 +36,25 @@ function refreshPage() {
 }
 
 /**
- * This function leads the player back to the index page. It is called from a modal in game.html.
+ * This function leads the player back to the index page. It is called from a modal in game.html. It transmitts also the values for the volumes.
  */
 function goToMenu() {
-  window.location.href = "index.html";
+  const url = new URL("index.html", window.location.href);
+  url.searchParams.set("volumeMusic", world.audioControl.volumeMusic);
+  url.searchParams.set("volumeEffects", world.audioControl.volumeEffects);
+  window.location.href = url.href;
 }
 
+/**
+ * This function toggles the image of the mute button.
+ */
+function toggleImageMute() {
+  const volumeImage = document.getElementById("volumeImage");
 
+  if (isMuted) {
+    volumeImage.src = "img/icons/volume.svg";
+  } else {
+    volumeImage.src = "img/icons/volume_off.svg";
+  }
+  isMuted = !isMuted;
+}

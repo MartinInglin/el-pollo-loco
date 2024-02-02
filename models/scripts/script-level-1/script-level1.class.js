@@ -4,6 +4,11 @@ class ScriptLevel1 extends Script {
   endboss;
   intervalIdsScript = [];
   timeoutIds = [];
+  AUDIO_MUSIC_GAME = new Audio("audio/music/game.mp3");
+  AUDIO_MUSIC_INTRO_ENDBOSS = new Audio("audio/music/intro_endboss.mp3");
+  AUDIO_MUSIC_ENDBOSS = new Audio("audio/music/endboss.mp3");
+  AUDIO_MUSIC_WIN = new Audio("audio/music/music-win.mp3");
+  AUDIO_MUSIC_LOOSE = new Audio("audio/music/music-loose.mp3");
 
   triggerPoints = [
     {
@@ -70,12 +75,27 @@ class ScriptLevel1 extends Script {
 
   constructor() {
     super();
+
     checkWorldExistence().then(() => {
       this.character = world.character;
       this.enemies = world.level.enemies;
       this.endboss = world.level.endboss;
+      this.startMusicGame();
       this.startScript();
     });
+  }
+
+  /**
+   * This function starts the music. It is needed because the browser does not allow music to start without any interaction from the user. So it checks if the user has moved the character and then starts the music.
+   */
+  startMusicGame() {
+    let id = setInterval(() => {
+      if (world.character.x !== 100) {
+        this.AUDIO_MUSIC_GAME.loop = true;
+        this.AUDIO_MUSIC_GAME.play();
+        clearInterval(id);
+      }
+    }, 500);
   }
 
   /**
@@ -102,7 +122,20 @@ class ScriptLevel1 extends Script {
     this.createEndboss(this.triggerPoints[5].xCoordinate + 400);
     this.freezeCamera();
     this.setEndLevelLeft();
+    this.stopMusicGame();
     this.sequenceEndbossAppears();
+  }
+
+  /**
+   * This function deletes all objects that aren't needed anymore for example uncollected bottles. Just to save CPU power.
+   */
+  deleteAllUnusedObjects() {
+    world.level.enemies = [];
+    world.collision.rectanglesEnemies = [];
+    world.level.bottles = [];
+    world.collision.rectanglesBottles = [];
+    world.level.coins = [];
+    world.collision.rectanglesCoins = [];
   }
 
   /**
@@ -120,21 +153,17 @@ class ScriptLevel1 extends Script {
   }
 
   /**
-   * This function deletes all objects that aren't needed anymore for example uncollected bottles. Just to save CPU power.
+   * This function stops the main music of the game.
    */
-  deleteAllUnusedObjects() {
-    world.level.enemies = [];
-    world.collision.rectanglesEnemies = [];
-    world.level.bottles = [];
-    world.collision.rectanglesBottles = [];
-    world.level.coins = [];
-    world.collision.rectanglesCoins = [];
+  stopMusicGame() {
+    this.AUDIO_MUSIC_GAME.pause();
   }
 
   /**
    * This function brings in the endboss from the right and calls the angry animation. Then it starts the jump attack.
    */
   sequenceEndbossAppears() {
+    this.startMusicIntroEndboss();
     this.createStatusbarEndboss();
     this.endbossWalkInRight();
     setTimeout(() => {
@@ -143,6 +172,17 @@ class ScriptLevel1 extends Script {
     setTimeout(() => {
       this.sequenceJumpAttack();
     }, 4000);
+  }
+
+  /**
+   * This function firstly plays the intro music and then continues with the main music of the endboss.
+   */
+  startMusicIntroEndboss() {
+    this.AUDIO_MUSIC_INTRO_ENDBOSS.play();
+    setTimeout(() => {
+      this.AUDIO_MUSIC_ENDBOSS.loop = true;
+      this.AUDIO_MUSIC_ENDBOSS.play();
+    }, 3500);
   }
 
   /**
@@ -173,7 +213,7 @@ class ScriptLevel1 extends Script {
 
   /**
    * This function checks if the player is dead or the endboss is defeated. If so it stops and calls the flying sequence, otherwise the endboss continues jumping.
-   * 
+   *
    * @returns - Ends the code if the return is true.
    */
   startJumpAttack() {
@@ -209,7 +249,7 @@ class ScriptLevel1 extends Script {
 
   /**
    * This function executes the jump. jump() is the movement up and down, the function in the parameter is either left or right.
-   * 
+   *
    * @param {function} movementFunction - Function to move left or right.
    */
   endbossJumpAttack(movementFunction) {
@@ -224,7 +264,7 @@ class ScriptLevel1 extends Script {
    * This function prepares for the flying sequence.
    */
   launchFlyingSequence() {
-    this.stopAnimationAttack();
+    this.stopIndividualAnimationEndboss("attackAnimationEndboss");
     this.sequenceEndbossHurt();
     setTimeout(() => {
       this.sequenceFlyAttack();
@@ -232,11 +272,13 @@ class ScriptLevel1 extends Script {
   }
 
   /**
-   * This function clears the running intervals from the previous functions.
+   * This function stops individual intervals
+   *
+   * @param {string} intervalId - An interval can be stored separatedly with an individual ID. If so it can be stopped here.
    */
-  stopAnimationAttack() {
-    clearInterval(this.endboss.individualIntervalIds.attackAnimationEndboss[0]);
-    this.endboss.individualIntervalIds.attackAnimationEndboss = [];
+  stopIndividualAnimationEndboss(intervalId) {
+    clearInterval(this.endboss.individualIntervalIds[intervalId][0]);
+    this.endboss.individualIntervalIds.intervalId = [];
   }
 
   /**
@@ -302,7 +344,7 @@ class ScriptLevel1 extends Script {
 
   /**
    * This function contains the flying sequence of the endboss. He creates a new chicken every 2500 ms. Therefore the "elapsedTimeObj.value" is counted +40 on every cycle.
-   * 
+   *
    * @param {object} elapsedTimeObj - The passed time is an Object because in "handleChickenCreation" it needs to be reset. This is only possible with an object, not with a number.
    */
   continueFlying(elapsedTimeObj) {
@@ -325,7 +367,7 @@ class ScriptLevel1 extends Script {
 
   /**
    * This function creates a new chicken after every 2.5 s and only if the endboss is within a certain widht. This is needed because otherwise the endboss would drop the chicken outside the visible canvas.
-   * 
+   *
    * @param {object} elapsedTimeObj - The passed time is an Object because in this function it needs to be reset. This is only possible with an object, not with a number.
    */
   handleChickenCreation(elapsedTimeObj) {
@@ -339,7 +381,7 @@ class ScriptLevel1 extends Script {
    * This function calls the hurt animation. Then it moves the endboss out.
    */
   launchShootingSequence() {
-    //this.stopAnimationAttack();
+    this.stopIndividualAnimationEndboss("flyAnimation");
     this.resetEndbossHurtAnimation();
     this.sequenceEndbossHurt();
     setTimeout(() => {
@@ -368,6 +410,7 @@ class ScriptLevel1 extends Script {
     this.resetHealthEndboss();
     this.resetStatusbar("imagesOrange");
     this.checkEndbossDefeated();
+    this.endbossShootingAnimation();
     this.startShootingAttackRight();
   }
 
@@ -506,10 +549,21 @@ class ScriptLevel1 extends Script {
    * This function shows the modal that congrats the player to his victory.
    */
   sequenceGameWon() {
+    this.stopAudioEffects();
     this.executeForTime(this.endbossDieAnimation, 200, 2000);
     setTimeout(() => {
+      this.AUDIO_MUSIC_ENDBOSS.pause();
+      this.AUDIO_MUSIC_WIN.loop = true;
+      this.AUDIO_MUSIC_WIN.play();
       const modalWin = new bootstrap.Modal(document.getElementById("staticBackdropYouWin"));
       modalWin.show();
     }, 2000);
+  }
+
+  /**
+   * This function sets the volume of the audio effects to 0. This is needed at the end of the game.
+   */
+  stopAudioEffects() {
+    world.audioControl.volumeEffects = 0;
   }
 }

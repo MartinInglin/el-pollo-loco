@@ -1,4 +1,4 @@
-class StatusbarBottles extends Statusbars{
+class StatusbarBottles extends Statusbars {
   images = [
     "img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/0.png",
     "img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/20.png",
@@ -21,7 +21,7 @@ class StatusbarBottles extends Statusbars{
   }
 
   /**
-   * This function sets the image of the statusbar for the bottles. It checks how many bottles the player has collected and displays the corresponding image. 
+   * This function sets the image of the statusbar for the bottles. It checks how many bottles the player has collected and displays the corresponding image.
    */
   changeStatusbar() {
     this.setStoppableInterval(() => {

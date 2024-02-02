@@ -4,7 +4,7 @@ class Endboss extends MovableObject {
   y = 170;
   speed = 10;
   adjustmentSprite = 0;
-  health = 20;
+  health = 100;
   imagesWalking = [
     "img/4_enemie_boss_chicken/1_walk/G1.png",
     "img/4_enemie_boss_chicken/1_walk/G2.png",
@@ -53,6 +53,7 @@ class Endboss extends MovableObject {
   AUDIO_FLYING = new Audio("audio/endboss-flying.mp3");
   AUDIO_ANGRY = new Audio("audio/bwack.mp3");
   AUDIO_HURT = new Audio("audio/endboss-hurt.mp3");
+  AUDIO_GRILL = new Audio("audio/endboss-grilled.mp3");
 
   constructor(xPosition) {
     super().loadImage(this.imagesWalking[0]);
@@ -62,12 +63,10 @@ class Endboss extends MovableObject {
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDead);
 
-    this.AUDIO_FLYING.volume = 1;
-    this.AUDIO_ANGRY.volume = 1;
-
     this.x = xPosition;
     this.audioAngryPlayed = false;
     this.audioFlyingPlayed = false;
+    this.audioGrillPlayed = false;
 
     this.applyGravityEndboss();
   }
@@ -94,6 +93,9 @@ class Endboss extends MovableObject {
     this.playAudioAngry();
   }
 
+  /**
+   * This function plays the angry audio sound from the endboss.
+   */
   playAudioAngry() {
     if (!this.audioAngryPlayed) {
       this.AUDIO_ANGRY.play();
@@ -114,11 +116,52 @@ class Endboss extends MovableObject {
     );
   }
 
+  /**
+   * This function calls the fly animation.
+   */
   flyAnimation() {
+    this.setStoppableInterval(
+      () => {
+        this.playContinuousAnimation(this.imagesAttack, "attack");
+        this.continuousPlayAudioFlying();
+      },
+      200,
+      "flyAnimation"
+    );
+  }
+
+  /**
+   * This function calls the shooting animation. The object "state" is needed to pass the variables to the next function and keep them manipulable.
+   */
+  shootAnimation() {
+    const state = {
+      previousDirection: !this.otherDirection,
+      audioPlayCount: 0,
+    };
+
     this.setStoppableInterval(() => {
       this.playContinuousAnimation(this.imagesAttack, "attack");
-      this.continuousPlayAudioFlying();
+      this.playAudioAngryThreeTimes(state);
     }, 200);
+  }
+
+  /**
+   * This function plays the audio of the angry endboss three times.
+   *
+   * @param {object} state - Object with the variables from shootAnimation ("previousDirection" and "audioPlayCount").
+   */
+  playAudioAngryThreeTimes(state) {
+    if (this.otherDirection !== state.previousDirection) {
+      let id = setInterval(() => {
+        this.AUDIO_ANGRY.play();
+        state.audioPlayCount++;
+        if (state.audioPlayCount === 3) {
+          state.audioPlayCount = 0;
+          clearInterval(id);
+        }
+      }, 1000);
+    }
+    state.previousDirection = this.otherDirection;
   }
 
   /**
@@ -129,6 +172,9 @@ class Endboss extends MovableObject {
     this.playAudioHurt();
   }
 
+  /**
+   * This function plays the audio "hurt" of the endboss.
+   */
   playAudioHurt() {
     this.AUDIO_HURT.play();
   }
@@ -137,7 +183,18 @@ class Endboss extends MovableObject {
    * This function calls the dying animation.
    */
   dieAnimation() {
+    this.playAudioGrill();
     this.playSingleRunAnimation(this.imagesDead, "die");
+  }
+
+  /**
+   * This function plays the audio "grill"  which is used a the very end of the game.
+   */
+  playAudioGrill() {
+    if (!this.audioGrillPlayed) {
+      this.AUDIO_GRILL.play();
+      this.audioGrillPlayed = true;
+    }
   }
 
   /**
@@ -148,12 +205,17 @@ class Endboss extends MovableObject {
     this.playAudioFlying();
   }
 
+  /**
+   * This function plays the audio "flying". It is used during the jump.
+   */
   playAudioFlying() {
-    this.AUDIO_FLYING.pause();
     this.AUDIO_FLYING.currentTime = 0;
     this.AUDIO_FLYING.play();
   }
 
+  /**
+   * This function plays the audio "flying" constantly. It stops if the health of the endboss drops to 0.
+   */
   continuousPlayAudioFlying() {
     if (!this.audioFlyingPlayed) {
       this.AUDIO_FLYING.loop = true;

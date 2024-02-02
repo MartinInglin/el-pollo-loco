@@ -1,4 +1,4 @@
-class RectangleBottleThrowable extends MovableObject{
+class RectangleBottleThrowable extends MovableObject {
   x;
   y = 0;
   height = 80;
@@ -16,8 +16,8 @@ class RectangleBottleThrowable extends MovableObject{
    */
   getPositionBottle() {
     this.setStoppableInterval(() => {
-        this.x = world.level.throwableBottles[0].x;
-        this.y = world.level.throwableBottles[0].y;
+      this.x = world.level.throwableBottles[0].x;
+      this.y = world.level.throwableBottles[0].y;
     }, 40);
   }
 }

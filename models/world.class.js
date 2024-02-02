@@ -7,6 +7,7 @@ class World {
   level = new Level(level1);
   collision = new Collision();
   statusbars = [new StatusbarHealthCharacter(), new StatusbarCoins(), new StatusbarBottles()];
+  audioControl = new AudioControl();
 
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
@@ -159,6 +160,6 @@ class World {
       });
     };
 
-    stopIntervalsMovableObjects([this.character, ...this.level.enemies, ...this.level.clouds]);
+    stopIntervalsMovableObjects([this.character, ...this.level.enemies, ...this.level.clouds, ...this.level.endboss]);
   }
 }

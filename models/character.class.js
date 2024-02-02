@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-  x = 6600;
+  x = 100;
   y = 250;
   height = 200;
   width = 140;
@@ -97,6 +97,7 @@ class Character extends MovableObject {
   AUDIO_THROW = new Audio("audio/throw-bottle.mp3");
   AUDIO_HURT = new Audio("audio/hurt.mp3");
   AUDIO_DIE = new Audio("audio/character-dies.mp3");
+  AUDIO_SNORE = new Audio("audio/snore.mp3");
 
   speed = 10;
   keyboard;
@@ -126,12 +127,6 @@ class Character extends MovableObject {
     this.loadImages(this.imagesIdleLong);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDie);
-
-    this.AUDIO_WALKING.volume = 0.2;
-    this.AUDIO_JUMP.volume = 1;
-    this.AUDIO_THROW.volume = 1;
-    this.AUDIO_HURT.volume = 1;
-    this.AUDIO_DIE.volume = 1;
 
     checkWorldExistence().then(() => {
       this.applyGravityCharacter();
@@ -310,6 +305,10 @@ class Character extends MovableObject {
    */
   characterStartSleeping() {
     this.playContinuousAnimation(this.imagesIdleLong, "idleLong");
+    if (this.x !== 100) {
+      this.AUDIO_SNORE.loop = true;
+      this.AUDIO_SNORE.play();
+    }
   }
 
   /**
@@ -458,7 +457,7 @@ class Character extends MovableObject {
    * @returns - boolean
    */
   healthCharacterDecreases() {
-    return this.health < this.previousHealth && this.health > 20;
+    return this.health < this.previousHealth && this.health > 0;
   }
 
   /**
@@ -488,6 +487,7 @@ class Character extends MovableObject {
   resetIdleAnimation() {
     this.characterSleep = false;
     this.iterationCountIdleAnimation = 0;
+    this.AUDIO_SNORE.pause();
   }
 
   /**
@@ -502,12 +502,34 @@ class Character extends MovableObject {
     }, 100);
   }
 
+  /**
+   * This function plays the audio when the character dies.
+   */
   playAudioDie() {
     if (!this.audioDiePlayed) {
+      this.stopMusic();
       this.AUDIO_DIE.play();
       this.audioDiePlayed = true;
+      this.playSadMusic();
     }
+  }
 
+  /**
+   * This function stops the game music if the character dies.
+   */
+  stopMusic() {
+    world.level.script.AUDIO_MUSIC_GAME.pause();
+    world.level.script.AUDIO_MUSIC_ENDBOSS.pause();
+  }
+
+  /**
+   * This function plays some sad music 2 seconds after the character has died.
+   */
+  playSadMusic() {
+    setTimeout(() => {
+      world.level.script.AUDIO_MUSIC_LOOSE.loop = true;
+      world.level.script.AUDIO_MUSIC_LOOSE.play();
+    }, 2000);
   }
 
   /**
@@ -520,7 +542,6 @@ class Character extends MovableObject {
         setTimeout(() => {
           const modalGameOver = new bootstrap.Modal(document.getElementById("staticBackdropGameOver"));
           modalGameOver.show();
-
         }, 2000);
       }
     }, 500);

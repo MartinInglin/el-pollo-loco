@@ -1,4 +1,4 @@
-class RectangleCoin extends MovableObject{
+class RectangleCoin extends MovableObject {
   coin;
 
   constructor(coin) {

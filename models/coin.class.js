@@ -8,7 +8,6 @@ class Coin extends MovableObject {
   constructor(xPosition) {
     super().loadImage("img/8_coin/coin_1.png");
     this.x = xPosition;
-    this.AUDIO_COIN_COLLECTED.volume = 1;
     this.coinCollectedAudioPlayed = false;
     this.coinCollected();
   }
@@ -17,8 +16,6 @@ class Coin extends MovableObject {
    * This function checks if the character has hit th coin. If so it deletes the coin.
    */
   coinCollected() {
-
-
     this.setStoppableInterval(() => {
       if (this.health === 0) {
         this.playCoinAudio();
@@ -28,12 +25,14 @@ class Coin extends MovableObject {
     }, 40);
   }
 
+  /**
+   * This function plays the cashier audio when a coin is collected.
+   */
   playCoinAudio() {
     if (!this.coinCollectedAudioPlayed) {
       this.AUDIO_COIN_COLLECTED.play();
       this.coinCollectedAudioPlayed = true;
     }
-
   }
 
   /**

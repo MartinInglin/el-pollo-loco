@@ -47,7 +47,7 @@ class StatusbarHealthEndboss extends Statusbars {
    */
   changeStatusbar() {
     const healthValues = [100, 80, 60, 40, 20, 0];
-  
+
     this.setStoppableInterval(() => {
       const enemyHealth = this.endboss.health;
       for (let i = 0; i < healthValues.length; i++) {
@@ -59,5 +59,4 @@ class StatusbarHealthEndboss extends Statusbars {
       }
     }, 100);
   }
-  
 }

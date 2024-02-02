@@ -39,6 +39,7 @@
     <script src="./models/statusbar-coins.class.js"></script>
     <script src="./models/statusbar-bottles.class.js"></script>
     <script src="./models/statusbar-health-endboss.js"></script>
+    <script src="./models/audio-control-class.js"></script>
   </head>
 
   <body onload="init()" id="body">
@@ -46,7 +47,13 @@
     <div class="canvas-container" id="container">
       <canvas width="720px" height="480px" id="canvas" class="canvas"> </canvas>
       <div class="menubar">
-        <button type="button" class="btn btn-primary" onclick="goToMenu()">Menu</button>
+        <button type="button" class="btn btn-primary" onclick="toggleImageMute(); world.audioControl.toggleMute()">
+          <img id="volumeImage" src="img/icons/volume.svg" alt="" />
+        </button>
+        <button type="button" class="btn btn-primary" onclick="refreshPage()">
+          <img src="img/icons/refresh.svg" alt="" />
+        </button>
+        <button type="button" class="btn btn-primary" onclick="goToMenu()">Finish</button>
       </div>
       <div class="controls-media">
         <div class="left-right">
@@ -111,6 +118,117 @@
               Back to Menu
             </button>
             <button type="button" class="btn btn-primary" onclick="refreshPage()">Play Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Settings -->
+    <div
+      class="modal fade"
+      id="modalSettings"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="modalSettings"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Settings</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Controls</h3>
+            <div class="container text-center">
+              <div class="row">
+                <div class="col">Move forward</div>
+                <div class="col">Arrow right</div>
+              </div>
+              <div class="row">
+                <div class="col">Move backward</div>
+                <div class="col">Arrow left</div>
+              </div>
+              <div class="row">
+                <div class="col">Jump</div>
+                <div class="col">Arrow up</div>
+              </div>
+              <div class="row">
+                <div class="col">Throw a bottle</div>
+                <div class="col">Space</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Music</h3>
+            <div class="container text-center">
+              <div class="row">
+                <div class="col">Volume</div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic0" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic1" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic2" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic3" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic4" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-body">
+            <h3 class="modal-title fs-5" id="staticBackdropLabel">Effects</h3>
+            <div class="container text-center">
+              <div class="row">
+                <div class="col">Volume</div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects0" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects1" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects2" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects3" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects4" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Got it, let's play!</button>
           </div>
         </div>
       </div>
