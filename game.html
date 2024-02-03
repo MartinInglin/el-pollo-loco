@@ -7,38 +7,48 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
+
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="./js/game.js"></script>
     <script src="./models/world.class.js"></script>
     <script src="./models/drawable-object.class.js"></script>
-    <script src="./models/movable-object.class.js"></script>
-    <script src="./models/character.class.js"></script>
-    <script src="./models/chicken.class.js"></script>
-    <script src="./models/cloud.class.js"></script>
     <script src="./models/background-object.class.js"></script>
     <script src="./models/keyboard.class.js"></script>
-    <script src="./models/level.class.js"></script>
-    <script src="./models/endboss.class.js"></script>
-    <script src="./models/chicken_small.class.js"></script>
-    <script src="./models/chicken_small-flying.class.js"></script>
-    <script src="./models/coin.class.js"></script>
-    <script src="./models/bottle.class.js"></script>
-    <script src="./models/bottle-throwable.class.js"></script>
+
+    <script src="./models/movable-objects/movable-object.class.js"></script>
+    <script src="./models/movable-objects/character.class.js"></script>
+    <script src="./models/movable-objects/chicken.class.js"></script>
+    <script src="./models/movable-objects/cloud.class.js"></script>
+
+    <script src="./models/movable-objects/endboss.class.js"></script>
+    <script src="./models/movable-objects/chicken_small.class.js"></script>
+    <script src="./models/movable-objects/chicken_small-flying.class.js"></script>
+    <script src="./models/movable-objects/coin.class.js"></script>
+    <script src="./models/movable-objects/bottle.class.js"></script>
+    <script src="./models/movable-objects/bottle-throwable.class.js"></script>
+
     <script src="./models/scripts/script.class.js"></script>
     <script src="./models/scripts/script-level-1/script-level1.class.js"></script>
+    <script src="./models/scripts/script-level-1/script-level1-endboss3.class.js"></script>
+
+    <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
-    <script src="./models/collision.class.js"></script>
-    <script src="./models/rectangle-character.class.js"></script>
-    <script src="./models/rectangle-enemies.class.js"></script>
-    <script src="./models/rectangle-coins.js"></script>
-    <script src="./models/rectangle-bottle.class.js"></script>
-    <script src="./models/rectangle-bottle-throwable.class.js"></script>
-    <script src="./models/rectangle-endboss.class.js"></script>
-    <script src="./models/statusbars.class.js"></script>
-    <script src="./models/statusbar-health-character.class.js"></script>
-    <script src="./models/statusbar-coins.class.js"></script>
-    <script src="./models/statusbar-bottles.class.js"></script>
-    <script src="./models/statusbar-health-endboss.js"></script>
+
+    <script src="./models/collision/collision.class.js"></script>
+    <script src="./models/collision/rectangle-character.class.js"></script>
+    <script src="./models/collision/rectangle-enemies.class.js"></script>
+    <script src="./models/collision/rectangle-coins.js"></script>
+    <script src="./models/collision/rectangle-bottle.class.js"></script>
+    <script src="./models/collision/rectangle-bottle-throwable.class.js"></script>
+    <script src="./models/collision/rectangle-endboss.class.js"></script>
+
+    <script src="./models/statusbars/statusbars.class.js"></script>
+    <script src="./models/statusbars/statusbar-health-character.class.js"></script>
+    <script src="./models/statusbars/statusbar-coins.class.js"></script>
+    <script src="./models/statusbars/statusbar-bottles.class.js"></script>
+    <script src="./models/statusbars/statusbar-health-endboss.js"></script>
+
     <script src="./models/audio-control-class.js"></script>
   </head>
 
@@ -47,13 +57,13 @@
     <div class="canvas-container" id="container">
       <canvas width="720px" height="480px" id="canvas" class="canvas"> </canvas>
       <div class="menubar">
-        <button type="button" class="btn btn-primary" onclick="toggleImageMute(); world.audioControl.toggleMute()">
+        <button type="button" class="btn btn-danger" onclick="toggleImageMute(); world.audioControl.toggleMute()">
           <img id="volumeImage" src="img/icons/volume.svg" alt="" />
         </button>
-        <button type="button" class="btn btn-primary" onclick="refreshPage()">
+        <button type="button" class="btn btn-danger" onclick="refreshPage()">
           <img src="img/icons/refresh.svg" alt="" />
         </button>
-        <button type="button" class="btn btn-primary" onclick="goToMenu()">Finish</button>
+        <button type="button" class="btn btn-danger" onclick="goToMenu()">Finish</button>
       </div>
       <div class="controls-media">
         <div class="left-right">
@@ -89,7 +99,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="goToMenu()">
               Back to Menu
             </button>
-            <button type="button" class="btn btn-primary" onclick="refreshPage()">Play Again</button>
+            <button type="button" class="btn btn-danger" onclick="refreshPage()">Play Again</button>
           </div>
         </div>
       </div>
@@ -117,118 +127,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="goToMenu()">
               Back to Menu
             </button>
-            <button type="button" class="btn btn-primary" onclick="refreshPage()">Play Again</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Settings -->
-    <div
-      class="modal fade"
-      id="modalSettings"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="modalSettings"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title fs-5" id="staticBackdropLabel">Settings</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <h3 class="modal-title fs-5" id="staticBackdropLabel">Controls</h3>
-            <div class="container text-center">
-              <div class="row">
-                <div class="col">Move forward</div>
-                <div class="col">Arrow right</div>
-              </div>
-              <div class="row">
-                <div class="col">Move backward</div>
-                <div class="col">Arrow left</div>
-              </div>
-              <div class="row">
-                <div class="col">Jump</div>
-                <div class="col">Arrow up</div>
-              </div>
-              <div class="row">
-                <div class="col">Throw a bottle</div>
-                <div class="col">Space</div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-body">
-            <h3 class="modal-title fs-5" id="staticBackdropLabel">Music</h3>
-            <div class="container text-center">
-              <div class="row">
-                <div class="col">Volume</div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic0" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic1" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic2" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic3" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeMusic" id="volumeMusic4" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-body">
-            <h3 class="modal-title fs-5" id="staticBackdropLabel">Effects</h3>
-            <div class="container text-center">
-              <div class="row">
-                <div class="col">Volume</div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects0" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects1" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects2" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects3" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="volumeEffects" id="volumeEffects4" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Got it, let's play!</button>
+            <button type="button" class="btn btn-danger" onclick="refreshPage()">Play Again</button>
           </div>
         </div>
       </div>

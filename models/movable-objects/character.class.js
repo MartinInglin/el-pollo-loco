@@ -576,7 +576,7 @@ class Character extends MovableObject {
    * @returns - boolean
    */
   playerCanThrowBottle(bottleThrown) {
-    return this.keyboard.SPACE && this.bottlesCollected > 0 && !bottleThrown;
+    return this.keyboard.THROW && this.bottlesCollected > 0 && !bottleThrown;
   }
 
   /**

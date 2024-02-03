@@ -527,8 +527,8 @@ class ScriptLevel1 extends Script {
    */
   shootBirds() {
     this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 200), 2000);
-    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 320), 3000);
-    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 400), 4000);
+    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 280), 3000);
+    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 360), 4000);
   }
 
   /**

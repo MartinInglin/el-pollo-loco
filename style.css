@@ -42,11 +42,11 @@ canvas {
   border-color: transparent;
 }
 
-.btn-primary {
+.btn-danger {
   background-color: rgba(165, 42, 42, 0.523);
 }
 
-.btn-primary:hover {
+.btn-danger:hover {
   background-color: brown;
 }
 
@@ -74,7 +74,7 @@ canvas {
 .menubar {
   position: absolute;
   bottom: 10px;
-  right: 0px;
+  right: 10px;
 }
 
 .height-100-precent {
@@ -193,6 +193,10 @@ align-items: center;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.controls {
+  padding-bottom: 24px;
 }
 
 @media (max-width: 768px) {

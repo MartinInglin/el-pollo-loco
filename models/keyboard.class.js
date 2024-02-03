@@ -4,6 +4,7 @@ class Keyboard {
   UP = false;
   DOWN = false;
   SPACE = false;
+  THROW = false;
 
   constructor() {
     document.addEventListener("keydown", (event) => {
@@ -24,20 +25,23 @@ class Keyboard {
    */
   handleKeyDown(key) {
     switch (key) {
-      case "ArrowLeft":
+      case "a":
         this.LEFT = true;
         break;
-      case "ArrowRight":
+      case "d":
         this.RIGHT = true;
         break;
-      case "ArrowUp":
+      case "w":
         this.UP = true;
         break;
       case "ArrowDown":
         this.DOWN = true;
         break;
       case " ": // Space key
-        this.SPACE = true;
+        this.UP = true;
+        break;
+      case "e":
+        this.THROW = true;
         break;
     }
   }
@@ -48,20 +52,23 @@ class Keyboard {
    */
   handleKeyUp(key) {
     switch (key) {
-      case "ArrowLeft":
+      case "a":
         this.LEFT = false;
         break;
-      case "ArrowRight":
+      case "d":
         this.RIGHT = false;
         break;
-      case "ArrowUp":
+      case "w":
         this.UP = false;
         break;
       case "ArrowDown":
         this.DOWN = false;
         break;
       case " ": // Space key
-        this.SPACE = false;
+        this.UP = false;
+        break;
+      case "e":
+        this.THROW = false;
         break;
     }
   }
