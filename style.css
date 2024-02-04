@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'zabars';
+  src: url('fonts/zabars.ttf') format('truetype');
+}
+
 body {
   height: 100vh;
   display: flex;
@@ -7,6 +12,20 @@ body {
   background-image: url("img/background.png");
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+h1 {
+  font-family: 'zabars', Arial, Helvetica, sans-serif;
+  font-size: 64px;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  font-family: 'zabars', Arial, Helvetica, sans-serif;
+  font-size: 40px;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
 }
 
 .d-none {
@@ -72,9 +91,29 @@ canvas {
 }
 
 .menubar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
   position: absolute;
   bottom: 10px;
   right: 10px;
+  width: 700px;
+  justify-content: space-between;
+}
+
+.menubar span {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 0 10px;
+  border-radius: 5px;
+}
+
+.menubar span:hover {
+  color: white;
+}
+
+.menubar .btn {
+  padding: 0 10px;
+  color: black;
 }
 
 .height-100-precent {
@@ -151,8 +190,8 @@ canvas {
 
 .settingsButton {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   border: none;
   background-color: transparent;
   height: 60px;
@@ -199,6 +238,10 @@ align-items: center;
   padding-bottom: 24px;
 }
 
+.form-check-input {
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .canvas-container {
     max-width: none;
@@ -206,6 +249,8 @@ align-items: center;
   .menubar {
     bottom: unset;
     top: 0;
+    margin-top: 10px;
+    width: auto;
   }
   .menubar .btn {
     padding: 0;
@@ -218,6 +263,23 @@ align-items: center;
   }
   .imageStartScreen {
     width: 100%;
+  }
+  .col {
+    padding-left: 0;
+  }
+  .menubar span {
+    display: none;
+  }
+  .settingsButton {
+    top: 0px;
+    right: 0px;
+    height: 50px;
+    width: 50px;
+  }
+  .storyButton {
+    top: 10px;
+    left: 10px;
+    padding: 0 10px;
   }
 }
 

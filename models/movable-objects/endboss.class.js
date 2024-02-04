@@ -183,8 +183,8 @@ class Endboss extends MovableObject {
    * This function calls the dying animation.
    */
   dieAnimation() {
-    this.playAudioGrill();
     this.playSingleRunAnimation(this.imagesDead, "die");
+    this.playAudioGrill();
   }
 
   /**

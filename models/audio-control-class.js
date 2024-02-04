@@ -90,7 +90,7 @@ class AudioControl {
       endboss.AUDIO_FLYING.volume = 0.2 * this.volumeEffects;
       endboss.AUDIO_ANGRY.volume = 1 * this.volumeEffects;
       endboss.AUDIO_HURT.volume = 1 * this.volumeEffects;
-      endboss.AUDIO_GRILL.volume = 0.5 * this.volumeEffects;
+      endboss.AUDIO_GRILL.volume = 1 * this.volumeEffects;
     }
   }
 

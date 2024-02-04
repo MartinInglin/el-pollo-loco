@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,7 +30,6 @@
 
     <script src="./models/scripts/script.class.js"></script>
     <script src="./models/scripts/script-level-1/script-level1.class.js"></script>
-    <script src="./models/scripts/script-level-1/script-level1-endboss3.class.js"></script>
 
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
@@ -57,13 +56,16 @@
     <div class="canvas-container" id="container">
       <canvas width="720px" height="480px" id="canvas" class="canvas"> </canvas>
       <div class="menubar">
-        <button type="button" class="btn btn-danger" onclick="toggleImageMute(); world.audioControl.toggleMute()">
-          <img id="volumeImage" src="img/icons/volume.svg" alt="" />
-        </button>
-        <button type="button" class="btn btn-danger" onclick="refreshPage()">
-          <img src="img/icons/refresh.svg" alt="" />
-        </button>
-        <button type="button" class="btn btn-danger" onclick="goToMenu()">Finish</button>
+        <span>Controls: Left: A | Right: D | Jump: W or Space | Throw Bottle: E</span>
+        <div>
+          <button type="button" class="btn btn-danger" onclick="toggleImageMute(); world.audioControl.toggleMute()">
+            <img id="volumeImage" src="img/icons/volume.svg" alt="" />
+          </button>
+          <button type="button" class="btn btn-danger" onclick="refreshPage()">
+            <img src="img/icons/refresh.svg" alt="" />
+          </button>
+          <button type="button" class="btn btn-danger" onclick="goToMenu()">Finish</button>
+        </div>
       </div>
       <div class="controls-media">
         <div class="left-right">

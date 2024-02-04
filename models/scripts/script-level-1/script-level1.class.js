@@ -5,10 +5,11 @@ class ScriptLevel1 extends Script {
   intervalIdsScript = [];
   timeoutIds = [];
   AUDIO_MUSIC_GAME = new Audio("audio/music/game.mp3");
-  AUDIO_MUSIC_INTRO_ENDBOSS = new Audio("audio/music/intro_endboss.mp3");
-  AUDIO_MUSIC_ENDBOSS = new Audio("audio/music/endboss.mp3");
-  AUDIO_MUSIC_WIN = new Audio("audio/music/music-win.mp3");
   AUDIO_MUSIC_LOOSE = new Audio("audio/music/music-loose.mp3");
+  AUDIO_MUSIC_INTRO_ENDBOSS = new Audio();
+  AUDIO_MUSIC_ENDBOSS = new Audio();;
+  AUDIO_MUSIC_WIN = new Audio();;
+
 
   triggerPoints = [
     {
@@ -118,12 +119,19 @@ class ScriptLevel1 extends Script {
    * This function prepares for the fight with the endboss.
    */
   startSequenceEndboss() {
+    this.loadMusicEndboss();
     this.deleteAllUnusedObjects();
     this.createEndboss(this.triggerPoints[5].xCoordinate + 400);
     this.freezeCamera();
     this.setEndLevelLeft();
     this.stopMusicGame();
     this.sequenceEndbossAppears();
+  }
+
+  loadMusicEndboss() {
+    this.AUDIO_MUSIC_INTRO_ENDBOSS = new Audio("audio/music/intro_endboss.mp3");
+    this.AUDIO_MUSIC_ENDBOSS = new Audio("audio/music/endboss.mp3");
+    this.AUDIO_MUSIC_WIN = new Audio("audio/music/music-win.mp3");
   }
 
   /**
@@ -549,9 +557,9 @@ class ScriptLevel1 extends Script {
    * This function shows the modal that congrats the player to his victory.
    */
   sequenceGameWon() {
-    this.stopAudioEffects();
     this.executeForTime(this.endbossDieAnimation, 200, 2000);
     setTimeout(() => {
+      this.stopAudioEffects();
       this.AUDIO_MUSIC_ENDBOSS.pause();
       this.AUDIO_MUSIC_WIN.loop = true;
       this.AUDIO_MUSIC_WIN.play();

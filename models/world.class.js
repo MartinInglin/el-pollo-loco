@@ -45,8 +45,6 @@ class World {
 
     this.addStatusbarsToMap(this.statusbars);
 
-    //this.addObjectsToMap(this.endScreens)
-
     let self = this;
     requestAnimationFrame(() => {
       self.draw();

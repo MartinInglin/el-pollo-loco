@@ -140,4 +140,13 @@ class MovableObject extends DrawableObject {
   stopIntervalsMovableObjects() {
     this.intervalIdsMovableObjects.forEach(clearInterval);
   }
+
+  /**
+   * This funciton checks if an enemy is killed by the character.
+   * 
+   * @returns - boolean
+   */
+  checkKilledByCharacter() {
+    return this.health === 0;
+  }
 }

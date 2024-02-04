@@ -64,15 +64,18 @@ class Script {
     this.endboss.hurtAnimation();
   }
 
-  endbossShootingAnimation() {
-    this.endboss.shootAnimation();
-  }
-
   /**
    * This function resets the hurt animation by setting the index to 0.
    */
   resetEndbossHurtAnimation() {
     this.endboss.currentImageIndices.hurt = 0;
+  }
+
+  /**
+   * This function executes the shooting animation of the endboss.
+   */
+  endbossShootingAnimation() {
+    this.endboss.shootAnimation();
   }
 
   /**
@@ -133,23 +136,22 @@ class Script {
   }
 
   /**
-   * This function creates a new bottle which the player can pick up. The do - while loop ensures that the bottle is not spawned directly on the player.
+   * This function creates a new bottle which the player can pick up. The timeout around the rectangle is needed because otherwise when a bottle is spawned directly on the player he wouldn't even notice he has collected a bottle.
    *
    * @param {number} amountOfBottles - The maximum amount of bottles that are created.
    */
   createNewBottles(amountOfBottles) {
     const playerX = world.character.x;
-    const playerWidth = 140; // Assuming the player sprite is 140px wide
+    const playerWidth = 140;
 
     for (let i = 0; i < amountOfBottles; i++) {
       if (world.level.bottles.length + world.character.bottlesCollected <= 3) {
-        let xPosition;
-        do {
-          xPosition = this.getRandomPositionBottle();
-        } while (xPosition >= playerX && xPosition <= playerX + playerWidth);
+        let xPosition = this.getRandomPositionBottle();
 
         world.level.bottles.push(new Bottle(xPosition));
-        world.collision.rectanglesBottles = world.level.bottles.map((bottle) => new RectangleBottle(bottle));
+        setTimeout(() => {
+          world.collision.rectanglesBottles = world.level.bottles.map((bottle) => new RectangleBottle(bottle));
+        }, 500);
       }
     }
   }

@@ -51,10 +51,11 @@ class ChickenSmall extends MovableObject {
    */
   enemyDies() {
     this.setStoppableInterval(() => {
-      if (this.health === 0 || this.x < -100) {
+      let killedByCharacter = this.checkKilledByCharacter();
+      if (this.health === 0 || this.x < world.character.x - 800) {
         this.stopIntervalsMovableObjects();
         this.enemyDiesAnimation();
-        if (this.x > 0) {
+        if (killedByCharacter) {
           this.playAudioDying();
         }
         setTimeout(() => {
