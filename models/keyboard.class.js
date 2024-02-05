@@ -78,7 +78,7 @@ class Keyboard {
     this.handleTouchEvent("LEFT", "touchButtonLeft", "touchButtonLeft");
     this.handleTouchEvent("RIGHT", "touchButtonRight", "touchButtonRight");
     this.handleTouchEvent("UP", "touchButtonJump", "touchButtonJump");
-    this.handleTouchEvent("SPACE", "touchButtonThrowBottle", "touchButtonThrowBottle");
+    this.handleTouchEvent("THROW", "touchButtonThrowBottle", "touchButtonThrowBottle");
   }
 
   /**

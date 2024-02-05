@@ -24,7 +24,7 @@ class BottleThrowable extends MovableObject {
   speed = 10;
   speedX = this.speed;
   acceleration = 2;
-  adjustmentSprite = 30;
+  adjustmentSprite = 0;
   bottleHitsEnemy = false;
   AUDIO_BOTTLE_FLYING = new Audio("audio/bottle-flying.mp3");
   AUDIO_BOTTLE_SPLASH = new Audio("audio/bottle-splash.mp3");

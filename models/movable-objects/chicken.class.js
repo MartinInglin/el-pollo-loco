@@ -6,11 +6,11 @@ class Chicken extends MovableObject {
   ];
   imageDead = ["img/3_enemies_chicken/chicken_normal/2_dead/dead.png"];
 
-  y = 370;
+  y;
   x;
   height = 80;
   width = 80;
-  adjustmentSprite = 0;
+  adjustmentSprite = -30;
   AUDIO_WALKING = new Audio("audio/chicken-cackling.mp3");
   AUDIO_IS_HIT = new Audio("audio/character-hit-enemy.mp3");
   AUDIO_CHICKEN_DROPPED = new Audio("audio/chicken-dropped.mp3");

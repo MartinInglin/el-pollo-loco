@@ -17,13 +17,13 @@
     <script src="./models/keyboard.class.js"></script>
 
     <script src="./models/movable-objects/movable-object.class.js"></script>
-    <script src="./models/movable-objects/character.class.js"></script>
+    <script src="./models/movable-objects/character/character-images.js"></script>
+    <script src="./models/movable-objects/character/character.class.js"></script>
     <script src="./models/movable-objects/chicken.class.js"></script>
     <script src="./models/movable-objects/cloud.class.js"></script>
-
     <script src="./models/movable-objects/endboss.class.js"></script>
-    <script src="./models/movable-objects/chicken_small.class.js"></script>
-    <script src="./models/movable-objects/chicken_small-flying.class.js"></script>
+    <script src="./models/movable-objects/chicken-small.class.js"></script>
+    <script src="./models/movable-objects/chicken-small-flying.class.js"></script>
     <script src="./models/movable-objects/coin.class.js"></script>
     <script src="./models/movable-objects/bottle.class.js"></script>
     <script src="./models/movable-objects/bottle-throwable.class.js"></script>
@@ -75,6 +75,33 @@
         <div class="jump-throw">
           <img id="touchButtonJump" src="img/icons/up.png" alt="" />
           <img id="touchButtonThrowBottle" src="img/icons/throw-bottle.png" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Landscape Mode -->
+    <div
+      class="modal fade"
+      id="staticBackdropLandscape"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="modal-title fs-5" id="staticBackdropLabel">Please flip the screen. The game looks much better that way.</span>
+          </div>
+          <div class="modal-body">
+            <img src="img/icons/flip-screen.svg" alt="" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="userCheckedOrientationModal()">
+              Got it. I like it my way.
+            </button>
+          </div>
         </div>
       </div>
     </div>

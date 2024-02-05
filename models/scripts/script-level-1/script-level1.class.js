@@ -7,18 +7,17 @@ class ScriptLevel1 extends Script {
   AUDIO_MUSIC_GAME = new Audio("audio/music/game.mp3");
   AUDIO_MUSIC_LOOSE = new Audio("audio/music/music-loose.mp3");
   AUDIO_MUSIC_INTRO_ENDBOSS = new Audio();
-  AUDIO_MUSIC_ENDBOSS = new Audio();;
-  AUDIO_MUSIC_WIN = new Audio();;
-
+  AUDIO_MUSIC_ENDBOSS = new Audio();
+  AUDIO_MUSIC_WIN = new Audio();
 
   triggerPoints = [
     {
       xCoordinate: 300,
       triggered: false,
       action: () => {
-        this.createNewChicken(this.triggerPoints[0].xCoordinate + 500, 370);
-        this.createNewChicken(this.triggerPoints[0].xCoordinate + 1000, 370);
-        this.createNewChicken(this.triggerPoints[0].xCoordinate + 1100, 370);
+        this.createNewChicken(this.triggerPoints[0].xCoordinate + 500, 340); //set back to
+        this.createNewChicken(this.triggerPoints[0].xCoordinate + 1000, 340);
+        this.createNewChicken(this.triggerPoints[0].xCoordinate + 1100, 340);
       },
     },
     {
@@ -34,7 +33,7 @@ class ScriptLevel1 extends Script {
       xCoordinate: 2800,
       triggered: false,
       action: () => {
-        this.createNewChicken(this.triggerPoints[2].xCoordinate + 500, 370);
+        this.createNewChicken(this.triggerPoints[2].xCoordinate + 500, 340);
         this.createNewChickenSmallFlying(this.triggerPoints[2].xCoordinate + 500, 150);
         this.createNewChickenSmall(this.triggerPoints[2].xCoordinate + 1000);
       },
@@ -43,9 +42,9 @@ class ScriptLevel1 extends Script {
       xCoordinate: 3800,
       triggered: false,
       action: () => {
-        this.createNewChicken(this.triggerPoints[3].xCoordinate + 500, 370);
+        this.createNewChicken(this.triggerPoints[3].xCoordinate + 500, 340);
         this.createNewChickenSmallFlying(this.triggerPoints[3].xCoordinate + 500, 200);
-        this.createNewChicken(this.triggerPoints[3].xCoordinate + 600, 370);
+        this.createNewChicken(this.triggerPoints[3].xCoordinate + 600, 340);
         this.createNewChickenSmallFlying(this.triggerPoints[3].xCoordinate + 600, 250);
         this.createNewChickenSmall(this.triggerPoints[3].xCoordinate + 800);
       },
@@ -54,14 +53,14 @@ class ScriptLevel1 extends Script {
       xCoordinate: 5000,
       triggered: false,
       action: () => {
-        this.createNewChicken(this.triggerPoints[4].xCoordinate + 500, 370);
+        this.createNewChicken(this.triggerPoints[4].xCoordinate + 500, 340);
         this.createNewChickenSmallFlying(this.triggerPoints[4].xCoordinate + 500, 150);
-        this.createNewChicken(this.triggerPoints[4].xCoordinate + 600, 370);
+        this.createNewChicken(this.triggerPoints[4].xCoordinate + 600, 340);
         this.createNewChickenSmallFlying(this.triggerPoints[4].xCoordinate + 600, 200);
         this.createNewChickenSmallFlying(this.triggerPoints[4].xCoordinate + 700, 250);
         this.createNewChickenSmall(this.triggerPoints[4].xCoordinate + 750);
-        this.createNewChicken(this.triggerPoints[4].xCoordinate + 800, 370);
-        this.createNewChicken(this.triggerPoints[4].xCoordinate + 900, 370);
+        this.createNewChicken(this.triggerPoints[4].xCoordinate + 800, 340);
+        this.createNewChicken(this.triggerPoints[4].xCoordinate + 900, 340);
         this.createNewChickenSmall(this.triggerPoints[4].xCoordinate + 950);
       },
     },
@@ -129,7 +128,7 @@ class ScriptLevel1 extends Script {
   }
 
   loadMusicEndboss() {
-    this.AUDIO_MUSIC_INTRO_ENDBOSS = new Audio("audio/music/intro_endboss.mp3");
+    this.AUDIO_MUSIC_INTRO_ENDBOSS = new Audio("audio/music/intro-endboss.mp3");
     this.AUDIO_MUSIC_ENDBOSS = new Audio("audio/music/endboss.mp3");
     this.AUDIO_MUSIC_WIN = new Audio("audio/music/music-win.mp3");
   }
@@ -418,8 +417,16 @@ class ScriptLevel1 extends Script {
     this.resetHealthEndboss();
     this.resetStatusbar("imagesOrange");
     this.checkEndbossDefeated();
+    this.setEndbosDirection();
     this.endbossShootingAnimation();
     this.startShootingAttackRight();
+  }
+
+  /**
+   * This function sets the direction of the endboss.
+   */
+  setEndbosDirection() {
+    this.endboss.otherDirection = false;
   }
 
   /**
@@ -438,7 +445,7 @@ class ScriptLevel1 extends Script {
    */
   setEnbossPositionRight() {
     this.endboss.x = 7200;
-    this.endboss.y = 170;
+    this.endboss.y = 140;
     this.endboss.otherDirection = false;
   }
 
@@ -492,7 +499,7 @@ class ScriptLevel1 extends Script {
    */
   setEndbossPositionLeft() {
     this.endboss.x = 6100;
-    this.endboss.y = 170;
+    this.endboss.y = 140;
     this.endboss.otherDirection = true;
   }
 
@@ -534,9 +541,9 @@ class ScriptLevel1 extends Script {
    * This function creates 3 fast flying birds on the right side.
    */
   shootBirds() {
-    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 200), 2000);
-    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 280), 3000);
-    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 360), 4000);
+    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 170), 2000);
+    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 250), 3000);
+    this.setStoppableTimeout(() => this.createNewChickenSmallFlying(7200, 330), 4000);
   }
 
   /**

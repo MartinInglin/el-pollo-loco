@@ -6,7 +6,7 @@ class ChickenSmallFlying extends MovableObject {
   speed = 10;
   imageDead = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
   AUDIO_DYING = new Audio("audio/chicken-hurt.mp3");
-  AUDIO_FLYING = new Audio("audio/chicken-flying-2.mp3");
+  AUDIO_FLYING = new Audio("audio/chicken-flying.mp3");
 
   constructor(xPosition, yPosition) {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/2_w.png");
